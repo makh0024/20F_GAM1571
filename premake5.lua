@@ -9,6 +9,7 @@ project "Game"
 	
 	files {
 		"premake5.lua",
-		"GenerateProjectFiles.bat",	
+		"GenerateProjectFiles.bat",
+		".gitignore",
 	}
 	
