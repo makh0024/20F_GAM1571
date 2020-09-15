@@ -3,6 +3,8 @@ workspace "Game"
 	platforms 	   { "x64" }
 	
 	location 	   "build"
+	characterset   "MBCS"
+	startproject   "Game"
 	
 project "Game"
 	kind "WindowedApp"
@@ -15,6 +17,16 @@ project "Game"
 		".gitignore",
 	}
 	
+	includedirs {
+		"Framework/Source",
+		"Game/Source"
+	}
+	
+	links {
+		"Framework",
+		"opengl32",
+	}
+	
 project "Framework"
 	kind 		"StaticLib"
 	location	"build/Framework"
@@ -24,3 +36,6 @@ project "Framework"
 		"Framework/Source/**.h",
 	}
 	
+	includedirs {
+		"Framework/Source",
+	}
