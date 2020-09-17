@@ -8,6 +8,7 @@ workspace "Game"
 	
 project "Game"
 	kind "WindowedApp"
+	location "build/Game"
 	
 	files {
 		"Game/Source/**.cpp",
@@ -19,7 +20,7 @@ project "Game"
 	
 	includedirs {
 		"Framework/Source",
-		"Game/Source"
+		"Game/Source",
 	}
 	
 	links {
