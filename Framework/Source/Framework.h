@@ -11,4 +11,7 @@
 #include "FWCore.h"
 #include "GameCore.h"
 
+#include "Utility/Helpers.h"
+#include "Utility/ShaderProgram.h"
+
 #endif //__Framework_H__

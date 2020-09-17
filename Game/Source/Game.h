@@ -6,4 +6,9 @@ public:
     virtual ~Game();
     virtual void Update() override;
     virtual void Draw() override;
+
+    void Init();
+
+protected:
+    fw::ShaderProgram* m_pShader;
 };

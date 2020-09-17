@@ -9,10 +9,13 @@ workspace "Game"
 project "Game"
 	kind "WindowedApp"
 	location "build/Game"
+	debugdir "Game"
 	
 	files {
 		"Game/Source/**.cpp",
 		"Game/Source/**.h",
+		"Game/Data/Basic.vert",
+		"Game/Data/Basic.frag",
 		"premake5.lua",
 		"GenerateProjectFiles.bat",
 		".gitignore",
