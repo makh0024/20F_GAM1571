@@ -7,15 +7,15 @@ workspace "Game"
 	startproject   "Game"
 	
 project "Game"
-	kind "WindowedApp"
+	kind	 "WindowedApp"
 	location "build/Game"
 	debugdir "Game"
 	
 	files {
 		"Game/Source/**.cpp",
 		"Game/Source/**.h",
-		"Game/Data/Basic.vert",
-		"Game/Data/Basic.frag",
+		"Game/Data/**.vert",
+		"Game/Data/**.frag",
 		"premake5.lua",
 		"GenerateProjectFiles.bat",
 		".gitignore",

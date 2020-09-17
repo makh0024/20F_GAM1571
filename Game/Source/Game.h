@@ -3,6 +3,7 @@
 class Game : public fw::GameCore
 {
 public:
+    Game();
     virtual ~Game();
     virtual void Update() override;
     virtual void Draw() override;
@@ -10,5 +11,6 @@ public:
     void Init();
 
 protected:
-    fw::ShaderProgram* m_pShader;
+    fw::ShaderProgram* m_pShader = nullptr;
+    fw::Mesh* m_pMesh = nullptr;
 };
