@@ -18,9 +18,8 @@ void Game::Draw()
 {
     glClearColor(0, 1, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
-
-    glPointSize(10);
     glUseProgram(m_pShader->GetProgram());
+    glPointSize(10);
     m_pMesh->Draw();
 }
 

@@ -1,5 +1,4 @@
 #include "FrameworkPCH.h"
-
 #include "Mesh.h"
 
 namespace fw {
@@ -35,6 +34,8 @@ namespace fw {
 
     void Mesh::Draw()
     {
+        /*glUseProgram(m_pShader->GetProgram());*/ //doesnt work?
+
         // Set this VBO to be the currently active one.
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 
