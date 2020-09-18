@@ -2,13 +2,18 @@
 
 namespace fw 
 {
+	class ShaderProgram;
+
 	class Mesh
 	{
 	public:
 		Mesh();
 		~Mesh();
 
-		void Draw();
+		void Draw(ShaderProgram* Shader);
+
+		void CreateHumanoid();
+		void CreateAnimal();
 
 	protected:
 		GLuint m_VBO = 0;
@@ -16,5 +21,6 @@ namespace fw
 		int m_NumVertices = 0;
 		int m_PrimitiveType = GL_POINTS;
 
+		//ShaderProgram* m_pShader = nullptr;
 	};
 } // namespace fw

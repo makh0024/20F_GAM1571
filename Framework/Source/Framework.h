@@ -15,5 +15,6 @@
 #include "Utility/ShaderProgram.h"
 
 #include "Mesh.h"
+#include "GameObject.h"
 
 #endif //__Framework_H__
