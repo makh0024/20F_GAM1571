@@ -20,7 +20,5 @@ namespace fw
 
 		int m_NumVertices = 0;
 		int m_PrimitiveType = GL_POINTS;
-
-		//ShaderProgram* m_pShader = nullptr;
 	};
 } // namespace fw

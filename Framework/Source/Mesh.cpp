@@ -15,7 +15,7 @@ namespace fw {
 
     void Mesh::Draw(ShaderProgram* Shader)
     {
-        glUseProgram(Shader->GetProgram()); //doesnt work?
+        glUseProgram(Shader->GetProgram()); 
 
         // Set this VBO to be the currently active one.
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
@@ -105,7 +105,7 @@ namespace fw {
 
         m_NumVertices = 40;
         m_PrimitiveType = GL_LINES;
-
+        glLineWidth(5);
 
         // Copy our attribute data into the VBO.
         int numAttributeComponents = m_NumVertices * 2; // x & y for each vertex.
@@ -162,7 +162,7 @@ namespace fw {
 
         m_NumVertices = 27;
         m_PrimitiveType = GL_TRIANGLES;
-        glLineWidth(5);
+        
 
         // Copy our attribute data into the VBO.
         int numAttributeComponents = m_NumVertices * 2; // x & y for each vertex.
