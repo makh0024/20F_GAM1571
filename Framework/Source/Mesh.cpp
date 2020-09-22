@@ -11,6 +11,7 @@ namespace fw {
 
     Mesh::~Mesh()
     {
+        glDeleteBuffers(1, &m_VBO);
     }
 
     void Mesh::Draw(ShaderProgram* Shader)

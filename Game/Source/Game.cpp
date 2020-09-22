@@ -45,7 +45,6 @@ void Game::Init()
     m_pAnimalMesh->CreateAnimal();
 
     //m_pHumanoid = new GameObject(m_pHumanMesh, m_pShader, 0, 0);
-
     //m_pAnimal = new GameObject(m_pAnimalMesh, m_pShader, 0, 0);
 
     for (int i = 0; i < 2; i++)
