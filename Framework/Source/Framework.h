@@ -17,4 +17,7 @@
 #include "Objects/Mesh.h"
 #include "Objects/GameObject.h"
 
+#include "ui/ImGuiManager.h"
+#include "../Libraries/imgui/imgui.h"
+
 #endif //__Framework_H__

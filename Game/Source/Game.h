@@ -3,9 +3,9 @@
 class Game : public fw::GameCore
 {
 public:
-    Game();
+    Game(fw::FWCore* pFramework);
     virtual ~Game();
-    virtual void Update() override;
+    virtual void Update(float deltaTime) override;
     virtual void Draw() override;
 
     void Init();
@@ -18,4 +18,6 @@ protected:
     //GameObject* m_pAnimal = nullptr;
 
     std::vector<GameObject*> m_gameObjects;
+
+    fw::ImGuiManager* m_pImguiMan = nullptr;
 };

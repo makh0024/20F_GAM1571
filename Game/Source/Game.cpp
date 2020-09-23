@@ -2,7 +2,7 @@
 
 #include "Game.h"
 
-Game::Game()
+Game::Game(fw::FWCore* pFramework) : fw::GameCore(pFramework)
 {
 }
 
@@ -15,12 +15,19 @@ Game::~Game()
 
 }
 
-void Game::Update()
+void Game::Update(float deltaTime)
 {
+    float x = 1.0f / deltaTime;
+
+    m_pImguiMan->StartFrame(deltaTime);
+    ImGui::ShowDemoWindow();
 }
 
 void Game::Draw()
 {
+    /*m_pImguiMan->StartFrame(1);
+    Imgui::ShowDemoWindow;*/
+
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -32,10 +39,17 @@ void Game::Draw()
     {
         m_gameObjects.at(i)->Draw();
     }
+
+    m_pImguiMan->EndFrame();
+    //ImGuiManager::EndFrame;
 }
 
 void Game::Init()
 {
+    
+    m_pImguiMan = new fw::ImGuiManager(m_pFramework);
+    m_pImguiMan->Init();
+    
     m_pShader = new fw::ShaderProgram("Data/Basic.vert", "Data/Basic.frag");
 
     //Human
