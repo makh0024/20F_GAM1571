@@ -32,7 +32,88 @@ namespace fw {
         glDrawArrays(m_PrimitiveType, 0, m_NumVertices);
     }
 
-    void Mesh::CreateAnimal()
+    //void Mesh::CreateAnimal()
+    //{
+    //    // Generate a buffer for our vertex attributes.
+    //    glGenBuffers(1, &m_VBO); // m_VBO is a GLuint.
+
+    //    // Set this VBO to be the currently active one.
+    //    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+
+    //    // Define our triangle as 3 positions.
+    //    float attribs[] =
+    //    {
+    //        -0.3f, 0.6f, // Tail
+    //        -0.7f, 0.6f, 
+
+    //        -0.3f, 0.6f, 
+    //        -0.7f, 0.2f,
+
+    //        -0.3f, 0.2f,
+    //        -0.7f, 0.6f,
+
+    //        -0.7f, 0.2f, // thas a body
+    //        -0.7f, -0.4f,
+
+    //        -0.3f, 0.2f,
+    //        -0.3f, -0.4f,
+
+    //        -0.3f, -0.4f,
+    //        -0.5f, -0.6f,
+    //       
+    //        -0.7f, -0.4f,
+    //        -0.5f, -0.6f,
+
+    //        -0.5f, -0.45f, // Bone
+    //        -0.5f, 0.2f,
+
+    //        -0.5f, -0.4f,  //side bone
+    //        -0.4f, -0.3f,
+
+    //        -0.5f, -0.4f,
+    //        -0.6f, -0.3f,
+
+    //        -0.5f, 0.1f,
+    //        -0.4f, 0.2f,
+
+    //        -0.5f, 0.1f,
+    //        -0.6f, 0.2f,
+
+    //        -0.5f, 0.0f,
+    //        -0.6f, 0.1f,
+
+    //        -0.5f, 0.0f,
+    //        -0.4f, 0.1f,
+
+    //        -0.5f, -0.1f,
+    //        -0.6f, 0.0f,
+
+    //        -0.5f, -0.1f,
+    //        -0.4f, 0.0f,
+
+    //        -0.5f, -0.2f,
+    //        -0.6f, -0.1f,
+
+    //        -0.5f, -0.2f,
+    //        -0.4f, -0.1f,
+
+    //        -0.5f, -0.3f,
+    //        -0.6f, -0.2f,
+
+    //        -0.5f, -0.3f,
+    //        -0.4f, -0.2f,
+    //    };
+
+    //    m_NumVertices = 40;
+    //    m_PrimitiveType = GL_LINES;
+    //    glLineWidth(5);
+
+    //    // Copy our attribute data into the VBO.
+    //    int numAttributeComponents = m_NumVertices * 2; // x & y for each vertex.
+    //    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numAttributeComponents, attribs, GL_STATIC_DRAW);
+    //}
+
+    void Mesh::CreateShape(int NumVertices, int PrimitiveType, float* attribs)
     {
         // Generate a buffer for our vertex attributes.
         glGenBuffers(1, &m_VBO); // m_VBO is a GLuint.
@@ -40,134 +121,72 @@ namespace fw {
         // Set this VBO to be the currently active one.
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 
-        // Define our triangle as 3 positions.
-        float attribs[] =
-        {
-            -0.3f, 0.6f, // Tail
-            -0.7f, 0.6f, 
+        m_NumVertices = NumVertices;
+        m_PrimitiveType = PrimitiveType;
+        //glLineWidth(5);
 
-            -0.3f, 0.6f, 
-            -0.7f, 0.2f,
-
-            -0.3f, 0.2f,
-            -0.7f, 0.6f,
-
-            -0.7f, 0.2f, // thas a body
-            -0.7f, -0.4f,
-
-            -0.3f, 0.2f,
-            -0.3f, -0.4f,
-
-            -0.3f, -0.4f,
-            -0.5f, -0.6f,
-           
-            -0.7f, -0.4f,
-            -0.5f, -0.6f,
-
-            -0.5f, -0.45f, // Bone
-            -0.5f, 0.2f,
-
-            -0.5f, -0.4f,  //side bone
-            -0.4f, -0.3f,
-
-            -0.5f, -0.4f,
-            -0.6f, -0.3f,
-
-            -0.5f, 0.1f,
-            -0.4f, 0.2f,
-
-            -0.5f, 0.1f,
-            -0.6f, 0.2f,
-
-            -0.5f, 0.0f,
-            -0.6f, 0.1f,
-
-            -0.5f, 0.0f,
-            -0.4f, 0.1f,
-
-            -0.5f, -0.1f,
-            -0.6f, 0.0f,
-
-            -0.5f, -0.1f,
-            -0.4f, 0.0f,
-
-            -0.5f, -0.2f,
-            -0.6f, -0.1f,
-
-            -0.5f, -0.2f,
-            -0.4f, -0.1f,
-
-            -0.5f, -0.3f,
-            -0.6f, -0.2f,
-
-            -0.5f, -0.3f,
-            -0.4f, -0.2f,
-        };
-
-        m_NumVertices = 40;
-        m_PrimitiveType = GL_LINES;
-        glLineWidth(5);
+        //float m_attribs = attribs;
 
         // Copy our attribute data into the VBO.
         int numAttributeComponents = m_NumVertices * 2; // x & y for each vertex.
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numAttributeComponents, attribs, GL_STATIC_DRAW);
     }
 
-    void Mesh::CreateHumanoid()
-    {
-        // Generate a buffer for our vertex attributes.
-        glGenBuffers(1, &m_VBO); // m_VBO is a GLuint.
+    //void Mesh::CreateHumanoid()
+    //{
+    //    // Generate a buffer for our vertex attributes.
+    //    glGenBuffers(1, &m_VBO); // m_VBO is a GLuint.
 
-        // Set this VBO to be the currently active one.
-        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+    //    // Set this VBO to be the currently active one.
+    //    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 
-        // Define our triangle as 3 positions.
-        float attribs[] =
-        {
-            0.3f, 0.6f, // Face Left
-            0.5f, 0.8f, 
-            0.5f, 0.3f, 
+    //    // Define our triangle as 3 positions.
+    //    float attribs[] =
+    //    {
+    //        0.3f, 0.6f, // Face Left
+    //        0.5f, 0.8f, 
+    //        0.5f, 0.3f, 
 
-            0.7f, 0.6f, // Face Right
-            0.5f, 0.8f, 
-            0.5f, 0.3f, 
+    //        0.7f, 0.6f, // Face Right
+    //        0.5f, 0.8f, 
+    //        0.5f, 0.3f, 
 
-            0.3f, 0.4f, // thas the body
-            0.7f, 0.4f, 
-            0.5f, -0.3f, 
+    //        0.3f, 0.4f, // thas the body
+    //        0.7f, 0.4f, 
+    //        0.5f, -0.3f, 
 
-            0.7f, -0.3f, // Leg down right
-            0.6f, -0.7f, 
-            0.5f, -0.3f, 
+    //        0.7f, -0.3f, // Leg down right
+    //        0.6f, -0.7f, 
+    //        0.5f, -0.3f, 
 
-            0.5f, -0.3f, // Leg down left
-            0.3f, -0.3f, 
-            0.4f, -0.7f, 
+    //        0.5f, -0.3f, // Leg down left
+    //        0.3f, -0.3f, 
+    //        0.4f, -0.7f, 
 
-            0.7f, -0.3f, // Leg up right
-            0.6f, 0.1f, 
-            0.5f, -0.3f, 
+    //        0.7f, -0.3f, // Leg up right
+    //        0.6f, 0.1f, 
+    //        0.5f, -0.3f, 
 
-            0.3f, -0.3f, // Leg up left
-            0.4f, 0.1f, 
-            0.5f, -0.3f,
+    //        0.3f, -0.3f, // Leg up left
+    //        0.4f, 0.1f, 
+    //        0.5f, -0.3f,
 
-            0.3f, 0.4f, // Left arm
-            0.4f, 0.4f,
-            0.2f, 0.0f,
+    //        0.3f, 0.4f, // Left arm
+    //        0.4f, 0.4f,
+    //        0.2f, 0.0f,
 
-            0.6f, 0.4f, // Right arm
-            0.7f, 0.4f,
-            0.8f, 0.0f,
-        };
+    //        0.6f, 0.4f, // Right arm
+    //        0.7f, 0.4f,
+    //        0.8f, 0.0f,
+    //    };
 
-        m_NumVertices = 27;
-        m_PrimitiveType = GL_TRIANGLES;
-        
+    //    m_NumVertices = 27;
+    //    m_PrimitiveType = GL_TRIANGLES;
+    //    
 
-        // Copy our attribute data into the VBO.
-        int numAttributeComponents = m_NumVertices * 2; // x & y for each vertex.
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numAttributeComponents, attribs, GL_STATIC_DRAW);
-    }
+    //    // Copy our attribute data into the VBO.
+    //    int numAttributeComponents = m_NumVertices * 2; // x & y for each vertex.
+    //    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numAttributeComponents, attribs, GL_STATIC_DRAW);
+    //}
 
 } // namespace fw
