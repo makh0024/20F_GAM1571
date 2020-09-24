@@ -8,11 +8,9 @@ Game::Game(fw::FWCore* pFramework) : fw::GameCore(pFramework)
 
 Game::~Game()
 {
-    //delete m_pHumanMesh;
-    //delete m_pAnimalMesh;
+    delete m_pHumanMesh;
+    delete m_pAnimalMesh;
     delete m_pShader;
-
-
 }
 
 void Game::Update(float deltaTime)

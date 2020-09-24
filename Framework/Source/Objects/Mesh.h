@@ -17,6 +17,8 @@ namespace fw
 
 		void CreateShape(int NumVertices, int PrimitiveType, float* attribs);
 
+		void SetUniform1f(ShaderProgram* pShader, char* name, float value);
+
 	protected:
 		GLuint m_VBO = 0;
 
