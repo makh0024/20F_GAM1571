@@ -11,3 +11,8 @@ GameCore::~GameCore()
 
 }
 
+FWCore* fw::GameCore::GetFramework()
+{
+	return m_pFramework;
+}
+

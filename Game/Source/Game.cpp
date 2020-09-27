@@ -4,6 +4,7 @@
 
 Game::Game(fw::FWCore* pFramework) : fw::GameCore(pFramework)
 {
+    m_pFramework = pFramework;
 }
 
 Game::~Game()
@@ -11,6 +12,8 @@ Game::~Game()
     delete m_pHumanMesh;
     delete m_pAnimalMesh;
     delete m_pShader;
+
+    delete m_pImguiMan; 
 }
 
 void Game::Update(float deltaTime)
@@ -19,6 +22,8 @@ void Game::Update(float deltaTime)
 
     m_pImguiMan->StartFrame(deltaTime);
     ImGui::ShowDemoWindow();
+
+    m_pPlayer->Update(deltaTime);
 }
 
 void Game::Draw()
@@ -33,10 +38,12 @@ void Game::Draw()
 
     //m_pAnimal->Draw();
        
-    for (int i = 0; i < m_gameObjects.size(); i++)
+   /* for (int i = 0; i < m_gameObjects.size(); i++)
     {
         m_gameObjects.at(i)->Draw();
-    }
+    }*/
+
+    m_pPlayer->Draw();
 
     m_pImguiMan->EndFrame();
     //ImGuiManager::EndFrame;
@@ -56,41 +63,41 @@ void Game::Init()
         // Define our triangle as 3 positions.
         float m_Humanattribs[] =
     {
-        0.3f, 0.6f, // Face Left
-        0.5f, 0.8f,
-        0.5f, 0.3f,
-
-        0.7f, 0.6f, // Face Right
-        0.5f, 0.8f,
-        0.5f, 0.3f,
-
-        0.3f, 0.4f, // thas the body
-        0.7f, 0.4f,
-        0.5f, -0.3f,
-
-        0.7f, -0.3f, // Leg down right
-        0.6f, -0.7f,
-        0.5f, -0.3f,
-
-        0.5f, -0.3f, // Leg down left
-        0.3f, -0.3f,
-        0.4f, -0.7f,
-
-        0.7f, -0.3f, // Leg up right
-        0.6f, 0.1f,
-        0.5f, -0.3f,
-
-        0.3f, -0.3f, // Leg up left
-        0.4f, 0.1f,
-        0.5f, -0.3f,
-
-        0.3f, 0.4f, // Left arm
-        0.4f, 0.4f,
-        0.2f, 0.0f,
-
-        0.6f, 0.4f, // Right arm
-        0.7f, 0.4f,
-        0.8f, 0.0f,
+        (0.3f - 0.5f), 0.6f, // Face Left
+        (0.5f - 0.5f), 0.8f,
+        (0.5f - 0.5f), 0.3f,
+        
+        (0.7f - 0.5f), 0.6f, // Face Right
+        (0.5f - 0.5f), 0.8f,
+        (0.5f - 0.5f), 0.3f,
+        
+        (0.3f - 0.5f), 0.4f, // thas the body
+        (0.7f - 0.5f), 0.4f,
+        (0.5f - 0.5f), -0.3f,
+        
+        (0.7f - 0.5f), -0.3f, // Leg down right
+        (0.6f - 0.5f), -0.7f,
+        (0.5f - 0.5f), -0.3f,
+        
+        (0.5f - 0.5f), -0.3f, // Leg down left
+        (0.3f - 0.5f), -0.3f,
+        (0.4f - 0.5f), -0.7f,
+        
+        (0.7f - 0.5f), -0.3f, // Leg up right
+        (0.6f - 0.5f), 0.1f,
+        (0.5f - 0.5f), -0.3f,
+        
+        (0.3f - 0.5f), -0.3f, // Leg up left
+        (0.4f - 0.5f), 0.1f,
+        (0.5f - 0.5f), -0.3f,
+        
+        (0.3f - 0.5f), 0.4f, // Left arm
+        (0.4f - 0.5f), 0.4f,
+        (0.2f - 0.5f), 0.0f,
+        
+        (0.6f - 0.5f), 0.4f, // Right arm
+        (0.8f - 0.5f), 0.0f,
+        (0.7f - 0.5f), 0.4f,
     };
 
     int m_HumanVertices = 27;
@@ -99,89 +106,86 @@ void Game::Init()
     //m_pHumanMesh->CreateHumanoid();
     m_pHumanMesh->CreateShape(m_HumanVertices, m_HumanPrimitiveType, m_Humanattribs);
 
-    //Animal
-    m_pAnimalMesh = new fw::Mesh();
+    m_pPlayer = new Player(5.0f, 5.0f, m_pHumanMesh, m_pShader, this);
 
-    // Define our triangle as 3 positions.
-    float m_Animalattribs[] =
-    {
-        -0.3f, 0.6f, // Tail
-        -0.7f, 0.6f,
 
-        -0.3f, 0.6f,
-        -0.7f, 0.2f,
+    ////Animal
+    //m_pAnimalMesh = new fw::Mesh();
 
-        -0.3f, 0.2f,
-        -0.7f, 0.6f,
+    //// Define our triangle as 3 positions.
+    //float m_Animalattribs[] =
+    //{
+    //    -0.3f, 0.6f, // Tail
+    //    -0.7f, 0.6f,
 
-        -0.7f, 0.2f, // thas a body
-        -0.7f, -0.4f,
+    //    -0.3f, 0.6f,
+    //    -0.7f, 0.2f,
 
-        -0.3f, 0.2f,
-        -0.3f, -0.4f,
+    //    -0.3f, 0.2f,
+    //    -0.7f, 0.6f,
 
-        -0.3f, -0.4f,
-        -0.5f, -0.6f,
+    //    -0.7f, 0.2f, // thas a body
+    //    -0.7f, -0.4f,
 
-        -0.7f, -0.4f,
-        -0.5f, -0.6f,
+    //    -0.3f, 0.2f,
+    //    -0.3f, -0.4f,
 
-        -0.5f, -0.45f, // Bone
-        -0.5f, 0.2f,
+    //    -0.3f, -0.4f,
+    //    -0.5f, -0.6f,
 
-        -0.5f, -0.4f,  //side bone
-        -0.4f, -0.3f,
+    //    -0.7f, -0.4f,
+    //    -0.5f, -0.6f,
 
-        -0.5f, -0.4f,
-        -0.6f, -0.3f,
+    //    -0.5f, -0.45f, // Bone
+    //    -0.5f, 0.2f,
 
-        -0.5f, 0.1f,
-        -0.4f, 0.2f,
+    //    -0.5f, -0.4f,  //side bone
+    //    -0.4f, -0.3f,
 
-        -0.5f, 0.1f,
-        -0.6f, 0.2f,
+    //    -0.5f, -0.4f,
+    //    -0.6f, -0.3f,
 
-        -0.5f, 0.0f,
-        -0.6f, 0.1f,
+    //    -0.5f, 0.1f,
+    //    -0.4f, 0.2f,
 
-        -0.5f, 0.0f,
-        -0.4f, 0.1f,
+    //    -0.5f, 0.1f,
+    //    -0.6f, 0.2f,
 
-        -0.5f, -0.1f,
-        -0.6f, 0.0f,
+    //    -0.5f, 0.0f,
+    //    -0.6f, 0.1f,
 
-        -0.5f, -0.1f,
-        -0.4f, 0.0f,
+    //    -0.5f, 0.0f,
+    //    -0.4f, 0.1f,
 
-        -0.5f, -0.2f,
-        -0.6f, -0.1f,
+    //    -0.5f, -0.1f,
+    //    -0.6f, 0.0f,
 
-        -0.5f, -0.2f,
-        -0.4f, -0.1f,
+    //    -0.5f, -0.1f,
+    //    -0.4f, 0.0f,
 
-        -0.5f, -0.3f,
-        -0.6f, -0.2f,
+    //    -0.5f, -0.2f,
+    //    -0.6f, -0.1f,
 
-        -0.5f, -0.3f,
-        -0.4f, -0.2f,
-    };
+    //    -0.5f, -0.2f,
+    //    -0.4f, -0.1f,
 
-    int m_AnimalVertices = 40;
-    int m_AnimalPrimitiveType = GL_LINES;
-    glLineWidth(5);
+    //    -0.5f, -0.3f,
+    //    -0.6f, -0.2f,
 
-    //m_pAnimalMesh->CreateAnimal();
-    m_pAnimalMesh->CreateShape(m_AnimalVertices, m_AnimalPrimitiveType, m_Animalattribs);
+    //    -0.5f, -0.3f,
+    //    -0.4f, -0.2f,
+    //};
 
-    //m_pHumanoid = new GameObject(m_pHumanMesh, m_pShader, 0, 0);
-    //m_pAnimal = new GameObject(m_pAnimalMesh, m_pShader, 0, 0);
+    //int m_AnimalVertices = 40;
+    //int m_AnimalPrimitiveType = GL_LINES;
+    //glLineWidth(5);
 
-    for (int i = 0; i < 2; i++)
-    {
-        GameObject* gameObject = new GameObject(0.0f, 0.0f);
-        m_gameObjects.push_back(gameObject);
-    }
+    //m_pAnimalMesh->CreateShape(m_AnimalVertices, m_AnimalPrimitiveType, m_Animalattribs);
 
-    m_gameObjects.at(0)->SetParameters(m_pHumanMesh, m_pShader);
-    m_gameObjects.at(1)->SetParameters(m_pAnimalMesh, m_pShader);
+
+    //fw::GameObject* gameObject = new fw::GameObject(fw::vec2(0.0f, 0.0f), m_pHumanMesh, m_pShader, this);
+    //m_gameObjects.push_back(gameObject);
+
+    //m_gameObjects.at(0)->SetParameters(m_pHumanMesh, m_pShader);
+   // m_gameObjects.at(1)->SetParameters(m_pAnimalMesh, m_pShader);
 }

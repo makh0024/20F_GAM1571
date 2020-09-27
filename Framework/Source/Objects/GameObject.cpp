@@ -1,23 +1,30 @@
+#include "Framework.h"
 #include "GameObject.h"
 
-GameObject::GameObject(int x, int y) :
-	m_x(0),
-	m_y(0)
-{
+using namespace fw;
 
+GameObject::GameObject(float x, float y, Mesh* Mesh, ShaderProgram* Shader,  GameCore* pGameCore)
+{
+	m_Pos = vec2(x,y);
+
+	m_pMesh = Mesh;
+	m_pShader = Shader;
+
+	m_pGameCore = pGameCore;
 }
 
 GameObject::~GameObject()
 {
 }
 
-void GameObject::Update()
+void GameObject::Update(float deltaTime)
 {
+	
 }
 
 void GameObject::Draw()
 {	
-	m_pMesh->Draw(m_pShader);
+	m_pMesh->Draw(m_Pos, m_pShader);
 }
 
 void GameObject::SetParameters(Mesh* Mesh, ShaderProgram* Shader)

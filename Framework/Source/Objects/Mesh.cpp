@@ -14,7 +14,7 @@ namespace fw {
         glDeleteBuffers(1, &m_VBO);
     }
 
-    void Mesh::Draw(ShaderProgram* Shader)
+    void Mesh::Draw(vec2 pos, ShaderProgram* Shader)
     {
         glUseProgram(Shader->GetProgram()); 
 
@@ -28,9 +28,11 @@ namespace fw {
         // Describe the attributes in the VBO to OpenGL.
         glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, 8, (void*)0);
 
+        //assert(x == 0.0f);
         //Setup our uniforms
         {
             SetUniform1f(Shader, "u_Time", (float)GetSystemTimeSinceGameStart());
+            SetUniform2f(Shader, "u_Increment", pos);
             /*int timeLocation = glGetUniformLocation(Shader->GetProgram(), "u_Time");
             glUniform1f(timeLocation, GetSystemTimeSinceGameStart());*/
         }
@@ -62,6 +64,12 @@ namespace fw {
     {
         int loc = glGetUniformLocation(pShader->GetProgram(), name);
         glUniform1f(loc, value);
+    }
+
+    void Mesh::SetUniform2f(ShaderProgram* pShader, char* name, vec2 position)
+    {
+        float loc = glGetUniformLocation(pShader->GetProgram(), name);
+        glUniform2f(loc, position.m_x, position.m_y);
     }
 
 } // namespace fw

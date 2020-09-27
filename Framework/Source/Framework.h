@@ -17,6 +17,8 @@
 #include "Objects/Mesh.h"
 #include "Objects/GameObject.h"
 
+#include "Math/Vector.h"
+
 #include "ui/ImGuiManager.h"
 #include "../Libraries/imgui/imgui.h"
 

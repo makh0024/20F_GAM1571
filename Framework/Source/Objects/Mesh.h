@@ -1,4 +1,5 @@
 #pragma once
+#include "Math/Vector.h"
 
 namespace fw 
 {
@@ -10,7 +11,7 @@ namespace fw
 		Mesh();
 		~Mesh();
 
-		void Draw(ShaderProgram* Shader);
+		void Draw(vec2 pos, ShaderProgram* Shader);
 
 		//void CreateHumanoid();
 		//void CreateAnimal();
@@ -18,6 +19,8 @@ namespace fw
 		void CreateShape(int NumVertices, int PrimitiveType, float* attribs);
 
 		void SetUniform1f(ShaderProgram* pShader, char* name, float value);
+
+		void SetUniform2f(ShaderProgram* pShader, char* name, vec2 position);
 
 	protected:
 		GLuint m_VBO = 0;

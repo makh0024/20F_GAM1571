@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Characters/Player.h"
+
 class Game : public fw::GameCore
 {
 public:
@@ -17,7 +19,12 @@ protected:
     //GameObject* m_pHumanoid = nullptr;
     //GameObject* m_pAnimal = nullptr;
 
-    std::vector<GameObject*> m_gameObjects;
+    std::vector<fw::GameObject*> m_gameObjects;
 
     fw::ImGuiManager* m_pImguiMan = nullptr;
+    //fw::FWCore* pCore;
+
+    Player* m_pPlayer = nullptr;
+
+    fw::FWCore* m_pFramework = nullptr;
 };
