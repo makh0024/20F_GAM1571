@@ -1,9 +1,9 @@
 #include "Vector.h"
 
-fw::vec2::vec2(float x, float y)
+fw::vec2::vec2(float ax, float ay)
 {
-	m_x = x; 
-	m_y = y;
+	x = ax; 
+	y = ay;
 }
 
 fw::vec2::~vec2()

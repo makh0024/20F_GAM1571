@@ -69,7 +69,7 @@ namespace fw {
     void Mesh::SetUniform2f(ShaderProgram* pShader, char* name, vec2 position)
     {
         float loc = glGetUniformLocation(pShader->GetProgram(), name);
-        glUniform2f(loc, position.m_x, position.m_y);
+        glUniform2f(loc, position.x, position.y);
     }
 
 } // namespace fw
