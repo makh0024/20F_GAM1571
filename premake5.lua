@@ -45,3 +45,11 @@ project "Framework"
 	includedirs {
 		"Framework/Source",
 	}
+	
+	filter "files:Framework/Libraries/imgui/*.cpp"
+		flags { 'NoPCH' }
+	
+	pchheader "FrameworkPCH.h"
+	pchsource "Framework/Source/Core/FWCore.cpp"
+	
+	

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Characters/Player.h"
+#include "Characters/Shapes.h"
 
 class Game : public fw::GameCore
 {
