@@ -6,6 +6,9 @@
 	characterset   "MBCS"
 	startproject   "Game"
 	
+	filter "configurations:Debug"
+	symbols "on"
+	
 project "Game"
 	kind	 "WindowedApp"
 	location "build/Game"
@@ -30,6 +33,9 @@ project "Game"
 		"Framework",
 		"opengl32",
 	}
+	
+	pchheader "GamePCH.h"
+	pchsource "Game/Source/WinMain.cpp"
 	
 project "Framework"
 	kind 		"StaticLib"

@@ -16,7 +16,9 @@ namespace fw
 		//void CreateHumanoid();
 		//void CreateAnimal();
 
-		void CreateShape(int NumVertices, int PrimitiveType, float* attribs);
+		void CreateShape(const int NumVertices, const int PrimitiveType, const float* attribs);
+
+		void CreateCircle(vec2 centerPos, float radius, int NumVertices);
 
 		void SetUniform1f(ShaderProgram* pShader, char* name, float value);
 

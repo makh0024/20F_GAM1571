@@ -1,9 +1,9 @@
-#include "Framework.h"
+#include "GamePCH.h"
 
 #include "Player.h"
 using namespace fw;
 
-Player::Player(float x, float y, Mesh* Mesh, ShaderProgram* Shader, GameCore* pGameCore) : fw::GameObject (x, y, Mesh, Shader, pGameCore)
+Player::Player(float x, float y, std::string Name, Mesh* Mesh, ShaderProgram* Shader, GameCore* pGameCore) : fw::GameObject (x, y, Name, Mesh, Shader, pGameCore)
 {
 	m_pFramework = m_pGameCore->GetFramework();
 }
@@ -33,4 +33,6 @@ void Player::Update(float deltaTime)
 	{
 		m_Pos.x += 3.0f * deltaTime;
 	}
+
+	ImGui::DragFloat2("Position", &m_Pos.x, 0.1f);
 }

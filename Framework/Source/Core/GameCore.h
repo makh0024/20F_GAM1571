@@ -2,6 +2,7 @@
 
 namespace fw 
 {
+	class Event;
 	class FWCore;
 
 	class GameCore
@@ -10,6 +11,7 @@ namespace fw
 		GameCore(FWCore* pFramework);
 		virtual ~GameCore();
 
+		virtual void OnEvent(Event* pEvent) = 0;
 		virtual void Update(float deltaTime) = 0;
 		virtual void Draw() = 0;
 
