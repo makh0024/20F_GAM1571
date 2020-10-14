@@ -8,6 +8,8 @@
 Game::Game(fw::FWCore* pFramework) : fw::GameCore(pFramework)
 {
     m_pFramework = pFramework;
+    m_boundaryRad = 3.0f;
+    m_numSides = 3.0;
 }
 
 Game::~Game()
@@ -34,16 +36,25 @@ void Game::Update(float deltaTime)
         m_gameObjects.at(i)->Update(deltaTime);
 
         ImGui::PushID(m_gameObjects.at(i));
-        ImGui::Text("Name: %s", m_pPlayer->GetName().c_str());
+        ImGui::Text("Name: %s", m_gameObjects.at(i)->GetName().c_str());
         ImGui::SameLine();
         if (ImGui::Button("Delete"))
         {
-            m_gameObjects.erase(m_gameObjects.begin() + i);
             m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
         }
         ImGui::PopID();
     }
 
+    //static float f1 = 3.0f;
+    if (ImGui::SliderFloat("Radius", &m_boundaryRad, 0.0f, 5.0f, "%f"))
+    {
+        m_pBoundaryMesh->CreateCircle(fw::vec2(0, 0), m_boundaryRad, m_numSides, false);
+    }
+
+    if (ImGui::SliderInt("Sides", &m_numSides, 3, 100, "%i"))
+    {
+        m_pBoundaryMesh->CreateCircle(fw::vec2(0, 0), m_boundaryRad, m_numSides, false);
+    }
 }
 
 void Game::Draw()
@@ -83,14 +94,18 @@ void Game::Init()
     m_pShader = new fw::ShaderProgram("Data/Basic.vert", "Data/Basic.frag");
 
     m_pHumanMesh = new fw::Mesh();
-    m_pHumanMesh->CreateShape(m_HumanVertices, m_HumanPrimitiveType, m_Humanattribs);
+    m_pHumanMesh->CreateShape(m_HumanVertices, m_HumanPrimitiveType, m_Humanattribs);    
 
-    m_CircleMesh = new fw::Mesh();
-    m_CircleMesh->CreateCircle(fw::vec2(0, 0), 3.0f, 15);
+    m_pBoundaryMesh = new fw::Mesh();
+    m_pBoundaryMesh->CreateCircle(fw::vec2(0, 0), m_boundaryRad, m_numSides, false);
 
-    m_pPlayer = new Player(5.0f, 5.0f, "Human", m_CircleMesh, m_pShader, this);
+    m_pCircleMesh = new fw::Mesh();
+    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), 0.25f, 15, true);
 
+    m_pPlayer = new Player(5.0f, 5.0f, "Circle", m_pCircleMesh, m_pShader, this);
+    
+    fw::GameObject* m_pBoundary = new fw::GameObject(5.0f, 5.0f, "Boundary", m_pBoundaryMesh, m_pShader, this);
 
     m_gameObjects.push_back(m_pPlayer);
-    
+    m_gameObjects.push_back(m_pBoundary);
 }

@@ -18,7 +18,7 @@ namespace fw
 
 		void CreateShape(const int NumVertices, const int PrimitiveType, const float* attribs);
 
-		void CreateCircle(vec2 centerPos, float radius, int NumVertices);
+		void CreateCircle(vec2 centerPos, float radius, int NumVertices, bool IsFilled);
 
 		void SetUniform1f(ShaderProgram* pShader, char* name, float value);
 

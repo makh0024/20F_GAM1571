@@ -18,7 +18,9 @@ protected:
     fw::ShaderProgram* m_pShader = nullptr;
     fw::Mesh* m_pHumanMesh = nullptr;
     fw::Mesh* m_pAnimalMesh = nullptr;
-    fw::Mesh* m_CircleMesh = nullptr;
+    
+    fw::Mesh* m_pBoundaryMesh = nullptr;
+    fw::Mesh* m_pCircleMesh = nullptr;
 
     std::vector<fw::GameObject*> m_gameObjects;
 
@@ -26,7 +28,9 @@ protected:
     fw::ImGuiManager* m_pImguiMan = nullptr;
 
     Player* m_pPlayer = nullptr;
-
+    
+    float m_boundaryRad;
+    int m_numSides;
 
     fw::FWCore* m_pFramework = nullptr;
 };

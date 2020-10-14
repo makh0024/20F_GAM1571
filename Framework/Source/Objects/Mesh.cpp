@@ -60,24 +60,21 @@ namespace fw {
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numAttributeComponents, attribs, GL_STATIC_DRAW);
     }
 
-    void Mesh::CreateCircle(vec2 centerPos, float radius, int NumVertices)
+    void Mesh::CreateCircle(vec2 centerPos, float radius, int NumVertices, bool IsFilled)
     {
         if (NumVertices < 2)
         {
             return;
         }
-        std::vector<float> m_Vertices;
 
-        bool IsFilled = false;
+        std::vector<float> m_Vertices;
 
         float angle = (2 * 3.1415926 / NumVertices);
         
-        //vec2 prvtemp = vec2(radius, 0);
-
         for (int i = 0; i < NumVertices; i++)
         {
-            vec2 temp = vec2(radius * sin(angle * (i+2)), radius * cos(angle * (i+2)));
             vec2 prvtemp = vec2(radius * sin(angle * (i + 1)), radius * cos(angle * (i + 1)));
+            vec2 temp = vec2(radius * sin(angle * (i + 2)), radius * cos(angle * (i + 2)));
 
             m_Vertices.push_back(prvtemp.x);
             m_Vertices.push_back(prvtemp.y);
@@ -90,37 +87,7 @@ namespace fw {
                 m_Vertices.push_back(centerPos.y);
                 m_Vertices.push_back(centerPos.x);
             }
-
         }
-
-       /* m_Vertices.push_back(6.0f);
-        m_Vertices.push_back(3.0f);
-
-        m_Vertices.push_back(6.0f);
-        m_Vertices.push_back(9.0f);*/
-
-        ////m_Vertices.push_back(9.0f);
-        ////m_Vertices.push_back(12.0f);
-
-        //// Generate a buffer for our vertex attributes.
-        //glGenBuffers(1, &m_VBO); // m_VBO is a GLuint.
-
-        //// Set this VBO to be the currently active one.
-        //glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-
-        //m_PrimitiveType = GL_TRIANGLES;
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);
-
-        //m_NumVertices = 3;
-
-        //// Copy our attribute data into the VBO.
-        //int numAttributeComponents = NumVertices * 2; // x & y for each vertex.
-        //glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numAttributeComponents, &m_Vertices[0], GL_STATIC_DRAW);
-
-
-
-
-
 
         // Generate a buffer for our vertex attributes.
         glGenBuffers(1, &m_VBO); // m_VBO is a GLuint.
@@ -130,18 +97,10 @@ namespace fw {
 
         m_NumVertices = (int)(m_Vertices.size() / 2);
 
-        if (IsFilled)
-        {
+        if (IsFilled)       
             m_PrimitiveType = GL_TRIANGLES;
-        }
-        else
-        {
-            m_PrimitiveType = GL_LINES;
-        }
-        
-        //glPointSize(20);
-
-        //float m_attribs = attribs;
+        else        
+            m_PrimitiveType = GL_LINES;        
 
         // Copy our attribute data into the VBO.
         int numAttributeComponents = m_NumVertices * 2; // x & y for each vertex.
