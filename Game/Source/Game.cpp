@@ -45,11 +45,15 @@ void Game::Update(float deltaTime)
             m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
         }
 
+        if ((m_pPlayer->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad - 0.04)
+        {
+            fw::vec2 newpos = m_pPlayer->GetPosition() - fw::vec2(5, 5);
+            m_pPlayer->SetPosition((newpos).Normalized() * (m_boundaryRad - 0.04) + fw::vec2(5, 5));
+        }
+
         if ((m_gameObjects.at(i)->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad)
         {
-            //ImGui::PushID(m_pgameObjects.at(i));
             m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
-            //ImGui::PopID();
         }
         ImGui::PopID();
     }
@@ -71,31 +75,13 @@ void Game::Update(float deltaTime)
         wglSwapInterval(m_VSyncEnabled ? 1 : 0);
     }
 
-    if ((m_pPlayer->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad - 0.04)
-    {
-        fw::vec2 newpos = m_pPlayer->GetPosition() - fw::vec2(5, 5);
-        m_pPlayer->SetPosition((newpos).Normalized() * (m_boundaryRad - 0.04) + fw::vec2(5,5));
-    }
-
     m_SpawnEnemyTimer += deltaTime;
 
-    if (m_SpawnEnemyTimer > 1.0f)
+    if (m_SpawnEnemyTimer > 0.75f)
     {
         SpawnEnemy(m_pPlayer->GetPosition(), m_boundaryRad);
         m_SpawnEnemyTimer = 0.0f;
     }
-
-    /*for (int i = 0; i < m_pEnemies.size(); i++)
-    {
-        m_pEnemies.at(i)->Update(deltaTime);
-
-        if ((m_pEnemies.at(i)->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad)
-        {
-            ImGui::PushID(m_pEnemies.at(i));
-            m_pEventManager->AddEvent(new RemoveFromGameEvent((m_pEnemies.at(i))));
-            ImGui::PopID();
-        }
-    }*/
 }
 
 void Game::Draw()
@@ -147,7 +133,7 @@ void Game::Init()
     m_pBoundaryMesh->CreateCircle(fw::vec2(0, 0), m_boundaryRad, m_numSides, 0.0f, false);
 
     m_pCircleMesh = new fw::Mesh();
-    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), 0.25f, 15, 0.0f, true);
+    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), 0.25f, 25, 0.0f, true);
 
     m_pPlayerController = new PlayerController();
     m_pPlayer = new Player(5.0f, 5.0f, "Circle", m_pPlayerController, m_pCircleMesh, m_pShader, fw::vec4::Red(), this);
