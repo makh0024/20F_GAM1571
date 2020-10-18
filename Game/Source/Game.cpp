@@ -168,7 +168,7 @@ void Game::SpawnEnemy(fw::vec2 destination, float radius)
     fw::Mesh* pEnemyMesh = new fw::Mesh();
     pEnemyMesh->CreateCircle(fw::vec2(0, 0), 0.2f, 4, 45.0f, true);
 
-    Enemy* m_pNewEnemy = new Enemy(destination.x, destination.y, m_boundaryRad, "Enemy" + std::to_string(m_pEnemies.size()), pEnemyMesh, m_pShader, fw::vec4::Blue(), this);
+    Enemy* m_pNewEnemy = new Enemy(destination.x, destination.y, m_boundaryRad, "Enemy" + std::to_string(m_gameObjects.size()), pEnemyMesh, m_pShader, fw::vec4::Blue(), this);
 
     m_gameObjects.push_back(m_pNewEnemy);
 }
