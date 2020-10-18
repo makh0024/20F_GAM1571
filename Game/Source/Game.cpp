@@ -145,8 +145,6 @@ void Game::Init()
 
     //Settings
     wglSwapInterval(m_VSyncEnabled ? 1 : 0);
-    
-    //SpawnEnemy(m_pPlayer->GetPosition(), m_boundaryRad);
 }
 
 void Game::SpawnEnemy(fw::vec2 destination, float radius)

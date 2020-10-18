@@ -26,27 +26,5 @@ Enemy::~Enemy()
 
 void Enemy::Update(float deltaTime)
 {
-	/*if (m_pEnemyController->IsUpHeld() == true)
-	{
-		m_Pos.y += 2.0f * deltaTime;
-	}
-
-	if (m_pEnemyController->IsLeftHeld() == true)
-	{
-		m_Pos.x -= 2.0f * deltaTime;
-	}
-
-	if (m_pEnemyController->IsDownHeld() == true)
-	{
-		m_Pos.y -= 2.0f * deltaTime;
-	}
-
-	if (m_pEnemyController->IsRightHeld() == true)
-	{
-		m_Pos.x += 2.0f * deltaTime;
-	}*/
-
-	//ImGui::DragFloat2("Position", &m_Pos.x, 0.1f);
-
 	m_Pos += m_direction * m_speed * deltaTime;
 }
