@@ -5,9 +5,10 @@
 
 using namespace fw;
 
-GameObject::GameObject(float x, float y, std::string Name, Mesh* Mesh, ShaderProgram* Shader,  GameCore* pGameCore)
+GameObject::GameObject(float x, float y, std::string Name, Mesh* Mesh, ShaderProgram* Shader, vec4 color, GameCore* pGameCore)
 {
 	m_Pos = vec2(x,y);
+	m_Color = color;
 
 	m_pMesh = Mesh;
 	m_pShader = Shader;
@@ -28,7 +29,7 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::Draw()
 {	
-	m_pMesh->Draw(m_Pos, m_pShader);
+	m_pMesh->Draw(m_Pos, m_Color, m_pShader);
 }
 
 std::string fw::GameObject::GetName()
@@ -40,4 +41,14 @@ void GameObject::SetParameters(Mesh* Mesh, ShaderProgram* Shader)
 {
 	m_pMesh = Mesh;
 	m_pShader = Shader;
+}
+
+void GameObject::SetPosition(fw::vec2 newpos)
+{
+	m_Pos = newpos;
+}
+
+fw::vec2 GameObject::GetPosition()
+{
+	return fw::vec2(m_Pos);
 }

@@ -15,6 +15,8 @@
 #include "GL/MyGLContext.h"
 #include "GameCore.h"
 #include "Utility/Helpers.h"
+#include "EventSystem/Event.h"
+#include "EventSystem/EventManager.h"
 
 namespace fw {
 

@@ -2,6 +2,9 @@
 
 #include "Characters/Player.h"
 #include "Characters/Shapes.h"
+#include "Characters/Enemy.h"
+
+class PlayerController;
 
 class Game : public fw::GameCore
 {
@@ -14,6 +17,7 @@ public:
 
     void Init();
 
+    void SpawnEnemy(fw::vec2 destination, float radius);
 protected:
     fw::ShaderProgram* m_pShader = nullptr;
     fw::Mesh* m_pHumanMesh = nullptr;
@@ -28,9 +32,18 @@ protected:
     fw::ImGuiManager* m_pImguiMan = nullptr;
 
     Player* m_pPlayer = nullptr;
-    
+
     float m_boundaryRad;
     int m_numSides;
 
     fw::FWCore* m_pFramework = nullptr;
+
+    PlayerController* m_pPlayerController;
+
+    //Settings
+    bool m_VSyncEnabled = true;
+
+    float m_SpawnEnemyTimer;
+
+    std::vector<Enemy*> m_pEnemies;
 };

@@ -74,4 +74,21 @@ namespace fw
 		float y;
 		float z;
 	};
+
+	class vec4
+	{
+	public:
+		vec4(float ax, float ay, float az, float aw);
+
+		float x;
+		float y;
+		float z;
+		float w;
+
+		static const vec4 Red() { return vec4(1, 0, 0, 1); }
+		static const vec4 Green() { return vec4(0, 1, 0, 1); }
+		static const vec4 Blue() { return vec4(0, 0, 1, 1); }
+		static const vec4 White() { return vec4(1, 1, 1, 1); }
+		static const vec4 Black() { return vec4(0, 0, 0, 1); }
+	};
 }

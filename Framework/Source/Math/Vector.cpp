@@ -81,10 +81,10 @@ void fw::vec2::Normalize()
 	*this /= Magnitude();
 }
 
-vec2 fw::vec2::Normalized()
+fw::vec2 fw::vec2::Normalized()
 {
 	vec2 v = *this;
-	v / Magnitude();
+	v /= Magnitude();
 	return v;
 }
 
@@ -97,4 +97,12 @@ void fw::vec2::SetValues(float o, float o2)
 {
 	x = o;
 	y = o2;	
+}
+
+fw::vec4::vec4(float ax, float ay, float az, float aw)
+{
+	x = ax;
+	y = ay;
+	z = az;
+	w = aw;
 }

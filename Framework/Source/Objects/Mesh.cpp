@@ -14,7 +14,7 @@ namespace fw {
         glDeleteBuffers(1, &m_VBO);
     }
 
-    void Mesh::Draw(vec2 pos, ShaderProgram* Shader)
+    void Mesh::Draw(vec2 pos, vec4 color, ShaderProgram* Shader)
     {
         glUseProgram(Shader->GetProgram()); 
 
@@ -33,6 +33,7 @@ namespace fw {
         {
             SetUniform1f(Shader, "u_Time", (float)GetSystemTimeSinceGameStart());
             SetUniform2f(Shader, "u_Increment", pos);
+            SetUniform4f(Shader, "u_Color", color);
             /*int timeLocation = glGetUniformLocation(Shader->GetProgram(), "u_Time");
             glUniform1f(timeLocation, GetSystemTimeSinceGameStart());*/
         }
@@ -60,7 +61,7 @@ namespace fw {
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numAttributeComponents, attribs, GL_STATIC_DRAW);
     }
 
-    void Mesh::CreateCircle(vec2 centerPos, float radius, int NumVertices, bool IsFilled)
+    void Mesh::CreateCircle(vec2 centerPos, float radius, int NumVertices, float Offset, bool IsFilled)
     {
         if (NumVertices < 2)
         {
@@ -69,12 +70,14 @@ namespace fw {
 
         std::vector<float> m_Vertices;
 
+        float angleOffset = Offset * 3.1415926 / 180.0f;
+
         float angle = (2 * 3.1415926 / NumVertices);
         
         for (int i = 0; i < NumVertices; i++)
         {
-            vec2 prvtemp = vec2(radius * sin(angle * (i + 1)), radius * cos(angle * (i + 1)));
-            vec2 temp = vec2(radius * sin(angle * (i + 2)), radius * cos(angle * (i + 2)));
+            vec2 prvtemp = vec2(radius * sin(angle * (i + 1) + angleOffset), radius * cos(angle * (i + 1) + angleOffset));
+            vec2 temp = vec2(radius * sin(angle * (i + 2) + angleOffset), radius * cos(angle * (i + 2) + angleOffset));
 
             m_Vertices.push_back(prvtemp.x);
             m_Vertices.push_back(prvtemp.y);
@@ -117,6 +120,12 @@ namespace fw {
     {
         float loc = glGetUniformLocation(pShader->GetProgram(), name);
         glUniform2f(loc, position.x, position.y);
+    }
+
+    void Mesh::SetUniform4f(ShaderProgram* pShader, char* name, vec4 color)
+    {
+        float loc = glGetUniformLocation(pShader->GetProgram(), name);
+        glUniform4f(loc, color.x, color.y, color.z, color.w);
     }
 
 } // namespace fw
