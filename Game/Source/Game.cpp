@@ -86,7 +86,7 @@ void Game::Update(float deltaTime)
 
 void Game::Draw()
 {
-    glClearColor(0, 0, 0, 0);
+    glClearColor(0.1, 0.1, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
     for (int i = 0; i < m_gameObjects.size(); i++)
@@ -136,9 +136,9 @@ void Game::Init()
     m_pCircleMesh->CreateCircle(fw::vec2(0, 0), 0.25f, 25, 0.0f, true);
 
     m_pPlayerController = new PlayerController();
-    m_pPlayer = new Player(5.0f, 5.0f, "Circle", m_pPlayerController, m_pCircleMesh, m_pShader, fw::vec4::Red(), this);
+    m_pPlayer = new Player(5.0f, 5.0f, "Circle", m_pPlayerController, m_pCircleMesh, m_pShader, fw::vec4::LightOrange(), this);
     
-    fw::GameObject* m_pBoundary = new fw::GameObject(5.0f, 5.0f, "Boundary", m_pBoundaryMesh, m_pShader, fw::vec4::Green(), this);
+    fw::GameObject* m_pBoundary = new fw::GameObject(5.0f, 5.0f, "Boundary", m_pBoundaryMesh, m_pShader, fw::vec4::White(), this);
 
     m_gameObjects.push_back(m_pPlayer);
     m_gameObjects.push_back(m_pBoundary);

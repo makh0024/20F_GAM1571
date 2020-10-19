@@ -105,6 +105,8 @@ namespace fw {
         else        
             m_PrimitiveType = GL_LINES;        
 
+        glLineWidth(5.0f);
+
         // Copy our attribute data into the VBO.
         int numAttributeComponents = m_NumVertices * 2; // x & y for each vertex.
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numAttributeComponents, &m_Vertices[0], GL_STATIC_DRAW);
