@@ -45,10 +45,10 @@ void Game::Update(float deltaTime)
             m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
         }
 
-        if ((m_pPlayer->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad - 0.04)
+        if ((m_pPlayer->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad - 0.25f)
         {
             fw::vec2 newpos = m_pPlayer->GetPosition() - fw::vec2(5, 5);
-            m_pPlayer->SetPosition((newpos).Normalized() * (m_boundaryRad - 0.04) + fw::vec2(5, 5));
+            m_pPlayer->SetPosition((newpos).Normalized() * (m_boundaryRad - 0.25f) + fw::vec2(5, 5));
         }
 
         if ((m_gameObjects.at(i)->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad)
@@ -117,7 +117,6 @@ void Game::OnEvent(fw::Event* pEvent)
 
     if (pEvent->GetType() == SpawnNewEnemyEvent::GetStaticEventType())
     {
-        //SpawnNewEnemyEvent* pSpawnNewEnemyEvent = static_cast<SpawnNewEnemyEvent*>(pEvent);
         SpawnEnemy(m_pPlayer->GetPosition(), m_boundaryRad);
     }
 }
