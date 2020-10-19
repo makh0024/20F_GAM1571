@@ -79,7 +79,7 @@ void Game::Update(float deltaTime)
 
     if (m_SpawnEnemyTimer > 0.75f)
     {
-        SpawnEnemy(m_pPlayer->GetPosition(), m_boundaryRad);
+        m_pEventManager->AddEvent(new SpawnNewEnemyEvent());
         m_SpawnEnemyTimer = 0.0f;
     }
 }
@@ -114,11 +114,16 @@ void Game::OnEvent(fw::Event* pEvent)
 
         delete pObject;
     }
+
+    if (pEvent->GetType() == SpawnNewEnemyEvent::GetStaticEventType())
+    {
+        //SpawnNewEnemyEvent* pSpawnNewEnemyEvent = static_cast<SpawnNewEnemyEvent*>(pEvent);
+        SpawnEnemy(m_pPlayer->GetPosition(), m_boundaryRad);
+    }
 }
 
 void Game::Init()
 {
-
     m_pEventManager = new fw::EventManager();
 
     m_pImguiMan = new fw::ImGuiManager(m_pFramework);
