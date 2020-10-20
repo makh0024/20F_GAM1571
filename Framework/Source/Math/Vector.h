@@ -14,18 +14,6 @@ namespace fw
 		float x;
 		float y;
 
-		//vec2 operator=(vec2& o);
-
-		/*vec2 operator+(const vec2& rhs);
-		vec2 operator-(const vec2& rhs);
-		vec2 operator*(float o) const;
-		vec2 operator/(float o) const;
-		vec2 operator+=(const vec2& rhs);
-		vec2 operator-=(const vec2& rhs);
-		vec2 operator*=(float o);
-		vec2 operator/=(float o);
-		vec2 operator+(float o) const;*/
-
 		vec2 operator+(float o) const { return vec2(x + o, y + o); }
 		vec2 operator-(float o) const { return vec2(x - o, y - o); }
 		vec2 operator*(float o) const { return vec2(x * o, y * o); }
