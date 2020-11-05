@@ -86,6 +86,8 @@ int FWCore::Run(GameCore* pGame)
     MSG message;
     bool done = false;
 
+    m_pGame = pGame;
+
     double previousTime = GetSystemTimeSinceGameStart();
 
     while( !done )
@@ -108,6 +110,7 @@ int FWCore::Run(GameCore* pGame)
             double deltaTime = currentTime - previousTime;
             previousTime = currentTime;
 
+            pGame->StartFrame((float)deltaTime);
             pGame->Update((float)deltaTime);
             pGame->Draw();
 
@@ -448,6 +451,13 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     PostQuitMessage( 0 );
 
                 pFWCore->m_KeyStates[wParam] = true;
+
+                InputEvent* pEvent = new InputEvent(
+                    InputEvent::DeviceType::Keyboard,
+                    InputEvent::DeviceState::Pressed,
+                    (unsigned int)wParam);
+
+                pFWCore->m_pGame->GetEventManager()->AddEvent(pEvent);
             }
         }
         return 0;
@@ -455,6 +465,13 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
     case WM_KEYUP:
         {
             pFWCore->m_KeyStates[wParam] = false;
+
+            InputEvent* pEvent = new InputEvent(
+                InputEvent::DeviceType::Keyboard,
+                InputEvent::DeviceState::Released,
+                (unsigned int)wParam);
+
+            pFWCore->m_pGame->GetEventManager()->AddEvent(pEvent);
         }
         return 0;
 

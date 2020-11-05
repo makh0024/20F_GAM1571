@@ -13,11 +13,15 @@ public:
     virtual ~Game();
     virtual void Update(float deltaTime) override;
     virtual void Draw() override;
+
     virtual void OnEvent(fw::Event* pEvent) override;
+    virtual void StartFrame(float deltaTime) override;
 
     void Init();
 
     void SpawnEnemy(fw::vec2 destination, float radius);
+
+    Player* GetPlayer() { return m_pPlayer;  }
 protected:
     fw::ShaderProgram* m_pShader = nullptr;
     fw::Mesh* m_pHumanMesh = nullptr;
@@ -25,10 +29,10 @@ protected:
     
     fw::Mesh* m_pBoundaryMesh = nullptr;
     fw::Mesh* m_pCircleMesh = nullptr;
+    fw::Mesh* m_pEnemyMesh = nullptr;
 
     std::vector<fw::GameObject*> m_gameObjects;
 
-    fw::EventManager* m_pEventManager = nullptr;
     fw::ImGuiManager* m_pImguiMan = nullptr;
 
     Player* m_pPlayer = nullptr;

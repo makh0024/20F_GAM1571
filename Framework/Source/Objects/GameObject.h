@@ -6,7 +6,16 @@ namespace fw {
 	class GameObject
 	{
 	public:
-		GameObject(float x, float y, std::string Name, Mesh* Mesh, ShaderProgram* Shader, vec4 color, GameCore* pGameCore);
+		enum class Type
+		{
+			Default,
+			Player,
+			Enemy
+		};
+
+		Type GetType() { return m_objectType; }
+	public:
+		GameObject(float x, float y, std::string Name, Mesh* Mesh, ShaderProgram* Shader, vec4 color, GameCore* pGameCore, Type objectType);
 		~GameObject();
 
 		virtual void Update(float deltaTime);
@@ -18,6 +27,7 @@ namespace fw {
 
 		fw::vec2 GetPosition();
 		void SetPosition(fw::vec2 newpos);
+
 	protected:
 		fw::vec2 m_Pos = fw::vec2(0.0f, 0.0f);
 		fw::vec4 m_Color = fw::vec4(0, 0, 0, 0);
@@ -28,5 +38,7 @@ namespace fw {
 		GameCore* m_pGameCore = nullptr;
 
 		std::string m_Name;
+
+		Type m_objectType;
 	};
 }

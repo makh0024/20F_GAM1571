@@ -3,7 +3,7 @@
 #include "Enemy.h"
 using namespace fw;
 
-Enemy::Enemy(float x, float y, float radius, std::string Name, Mesh* Mesh, ShaderProgram* Shader, fw::vec4 color, GameCore* pGameCore) : fw::GameObject (x, y, Name, Mesh, Shader, color, pGameCore)
+Enemy::Enemy(float x, float y, float radius, std::string Name, Mesh* Mesh, ShaderProgram* Shader, fw::vec4 color, GameCore* pGameCore) : fw::GameObject (x, y, Name, Mesh, Shader, color, pGameCore, Type::Enemy)
 {
 	m_pFramework = m_pGameCore->GetFramework();
 

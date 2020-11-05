@@ -9,32 +9,75 @@ PlayerController::~PlayerController()
 {
 }
 
-void PlayerController::Update(fw::GameCore* gamecore)
+void PlayerController::StartFrame()
 {
-	fw::FWCore* m_pFramework = gamecore->GetFramework();
+	m_OldFlags = m_Flags;
+}
 
-	m_Up = false;
-	m_Down = false;
-	m_Left = false;
-	m_Right = false;
-
-	if (m_pFramework->IsKeyDown('W') || m_pFramework->IsKeyDown(VK_UP))
+void PlayerController::OnEvent(fw::Event* pEvent)
+{
+	if (pEvent->GetType() == fw::InputEvent::GetStaticEventType())
 	{
-		m_Up = true;
-	}
+		fw::InputEvent* pInputEvent = static_cast<fw::InputEvent*>(pEvent);
 
-	if (m_pFramework->IsKeyDown('A') || m_pFramework->IsKeyDown(VK_LEFT))
-	{
-		m_Left = true;
-	}
+		if (pInputEvent->GetDeviceType() == fw::InputEvent::DeviceType::Keyboard
+			&& pInputEvent->GetDeviceState() == fw::InputEvent::DeviceState::Pressed)
+		{
+			if (pInputEvent->GetKeyCode() == 'W') { m_Flags = m_Flags | Mask::Up; }
+			if (pInputEvent->GetKeyCode() == 'A') { m_Flags = m_Flags | Mask::Left; }
+			if (pInputEvent->GetKeyCode() == 'S') { m_Flags = m_Flags | Mask::Down; }
+			if (pInputEvent->GetKeyCode() == 'D') { m_Flags = m_Flags | Mask::Right; }
+		}
 
-	if (m_pFramework->IsKeyDown('S') || m_pFramework->IsKeyDown(VK_DOWN))
-	{
-		m_Down = true;
-	}
+		if (pInputEvent->GetDeviceType() == fw::InputEvent::DeviceType::Keyboard
+			&& pInputEvent->GetDeviceState() == fw::InputEvent::DeviceState::Released)
+		{
+			if (pInputEvent->GetKeyCode() == 'W') { m_Flags &= ~Mask::Up; }
+			if (pInputEvent->GetKeyCode() == 'A') { m_Flags &= ~Mask::Left; }
+			if (pInputEvent->GetKeyCode() == 'S') { m_Flags &= ~Mask::Down; }
+			if (pInputEvent->GetKeyCode() == 'D') { m_Flags &= ~Mask::Right; }
+		}
 
-	if (m_pFramework->IsKeyDown('D') || m_pFramework->IsKeyDown(VK_RIGHT))
-	{
-		m_Right = true;
+		/*fw::FWCore* m_pFramework = gamecore->GetFramework();
+
+		m_Up = false;
+		m_Down = false;
+		m_Left = false;
+		m_Right = false;
+
+		if (m_pFramework->IsKeyDown('W') || m_pFramework->IsKeyDown(VK_UP))
+		{
+			m_Up = true;
+		}
+
+		if (m_pFramework->IsKeyDown('A') || m_pFramework->IsKeyDown(VK_LEFT))
+		{
+			m_Left = true;
+		}
+
+		if (m_pFramework->IsKeyDown('S') || m_pFramework->IsKeyDown(VK_DOWN))
+		{
+			m_Down = true;
+		}
+
+		if (m_pFramework->IsKeyDown('D') || m_pFramework->IsKeyDown(VK_RIGHT))
+		{
+			m_Right = true;
+		}*/
 	}
+}
+
+bool PlayerController::IsHeld(Mask mask)
+{
+	return (m_Flags & mask) != 0;
+}
+
+bool PlayerController::WasNewlyPressed(Mask mask)
+{
+	return (((m_Flags & mask) !=0) && ((m_OldFlags & mask) == 0));
+}
+
+bool PlayerController::WasNewlyReleased(Mask mask)
+{
+	return (((m_Flags & mask) == 0) && ((m_OldFlags & mask) != 0));
 }

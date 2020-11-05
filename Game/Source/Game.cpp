@@ -22,6 +22,16 @@ Game::~Game()
 
     delete m_pEventManager;
     delete m_pImguiMan; 
+
+    delete m_pBoundaryMesh;
+    delete m_pCircleMesh;
+    //delete m_pEnemyMesh;
+    delete m_pPlayerController;
+
+    for (fw::GameObject* pObject : m_gameObjects)
+    {
+        delete pObject;
+    }
 }
 
 void Game::Update(float deltaTime)
@@ -53,12 +63,18 @@ void Game::Update(float deltaTime)
 
         if ((m_gameObjects.at(i)->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad)
         {
-            m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
+            m_pEventManager->AddEvent(new RemoveFromGameEvent(m_gameObjects.at(i)));
+        }
+
+        if ((m_gameObjects.at(i)->GetType() == fw::GameObject::Type::Enemy))
+        {
+            if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= 0.4f)
+            {
+                m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
+            }
         }
         ImGui::PopID();
     }
-
-    m_pPlayerController->Update(this);
 
     if (ImGui::SliderFloat("Radius", &m_boundaryRad, 0.0f, 5.0f, "%f"))
     {
@@ -104,6 +120,8 @@ void Game::Draw()
 
 void Game::OnEvent(fw::Event* pEvent)
 {
+    m_pPlayerController->OnEvent(pEvent);
+
     if (pEvent->GetType() == RemoveFromGameEvent::GetStaticEventType())
     {
         RemoveFromGameEvent* pRemoveFromGameEvent = static_cast<RemoveFromGameEvent*>(pEvent);
@@ -121,8 +139,20 @@ void Game::OnEvent(fw::Event* pEvent)
     }
 }
 
+void Game::StartFrame(float deltaTime)
+{
+    //m_pImguiMan->StartFrame(deltaTime);
+    
+    m_pPlayerController->StartFrame();
+
+    m_pEventManager->DispatchAllEvents(this);
+}
+
 void Game::Init()
 {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     m_pEventManager = new fw::EventManager();
 
     m_pImguiMan = new fw::ImGuiManager(m_pFramework);
@@ -138,25 +168,27 @@ void Game::Init()
 
     m_pCircleMesh = new fw::Mesh();
     m_pCircleMesh->CreateCircle(fw::vec2(0, 0), 0.25f, 25, 0.0f, true);
+    
 
     m_pPlayerController = new PlayerController();
-    m_pPlayer = new Player(5.0f, 5.0f, "Circle", m_pPlayerController, m_pCircleMesh, m_pShader, fw::vec4::LightOrange(), this);
+    m_pPlayer = new Player(5.0f, 5.0f, "Circle", m_pPlayerController, m_pCircleMesh, m_pShader, fw::vec4::LightOrange(0.9f), this);
     
-    fw::GameObject* m_pBoundary = new fw::GameObject(5.0f, 5.0f, "Boundary", m_pBoundaryMesh, m_pShader, fw::vec4::White(), this);
+    fw::GameObject* m_pBoundary = new fw::GameObject(5.0f, 5.0f, "Boundary", m_pBoundaryMesh, m_pShader, fw::vec4::White(1), this, fw::GameObject::Type::Default);
 
     m_gameObjects.push_back(m_pPlayer);
     m_gameObjects.push_back(m_pBoundary);
 
+    m_pEnemyMesh = new fw::Mesh();
+    m_pEnemyMesh->CreateCircle(fw::vec2(0, 0), 0.2f, 4, 45.0f, true);
     //Settings
     wglSwapInterval(m_VSyncEnabled ? 1 : 0);
 }
 
 void Game::SpawnEnemy(fw::vec2 destination, float radius)
 {
-    fw::Mesh* pEnemyMesh = new fw::Mesh();
-    pEnemyMesh->CreateCircle(fw::vec2(0, 0), 0.2f, 4, 45.0f, true);
-
-    Enemy* m_pNewEnemy = new Enemy(destination.x, destination.y, m_boundaryRad, "Enemy" + std::to_string(m_gameObjects.size()), pEnemyMesh, m_pShader, fw::vec4::Blue(), this);
+    Enemy* m_pNewEnemy = new Enemy(destination.x, destination.y, m_boundaryRad, "Enemy" + std::to_string(m_gameObjects.size()), m_pEnemyMesh, m_pShader, fw::vec4::Blue(0.75f), this);
 
     m_gameObjects.push_back(m_pNewEnemy);
+
+    //delete pEnemyMesh;
 }

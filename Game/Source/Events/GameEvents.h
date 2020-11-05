@@ -34,3 +34,19 @@ public:
 protected:
 
 };
+
+class KillPlayerEvent : public fw::Event
+{
+public:
+    KillPlayerEvent(fw::GameObject* pObject)
+    {
+        m_EventType = "KillPlayerEvent";
+    }
+    ~KillPlayerEvent() {}
+
+    static const char* GetStaticEventType() { return "KillPlayerEvent"; }
+    virtual const char* GetType() override { return GetStaticEventType(); }
+
+protected:
+
+};

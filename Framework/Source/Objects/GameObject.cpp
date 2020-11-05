@@ -5,7 +5,7 @@
 
 using namespace fw;
 
-GameObject::GameObject(float x, float y, std::string Name, Mesh* Mesh, ShaderProgram* Shader, vec4 color, GameCore* pGameCore)
+GameObject::GameObject(float x, float y, std::string Name, Mesh* Mesh, ShaderProgram* Shader, vec4 color, GameCore* pGameCore, Type objectType)
 {
 	m_Pos = vec2(x,y);
 	m_Color = color;
@@ -16,6 +16,8 @@ GameObject::GameObject(float x, float y, std::string Name, Mesh* Mesh, ShaderPro
 	m_pGameCore = pGameCore;
 
 	m_Name = Name;
+
+	m_objectType = objectType;
 }
 
 GameObject::~GameObject()
