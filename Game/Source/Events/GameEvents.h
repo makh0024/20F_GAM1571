@@ -35,18 +35,21 @@ protected:
 
 };
 
-class KillPlayerEvent : public fw::Event
+class EnemyCollisionEvent : public fw::Event
 {
 public:
-    KillPlayerEvent(fw::GameObject* pObject)
+    EnemyCollisionEvent(fw::GameObject* pObject)
     {
-        m_EventType = "KillPlayerEvent";
+        m_EventType = "EnemyCollisionEvent";
     }
-    ~KillPlayerEvent() {}
+    ~EnemyCollisionEvent() {}
 
-    static const char* GetStaticEventType() { return "KillPlayerEvent"; }
+    static const char* GetStaticEventType() { return "EnemyCollisionEvent"; }
     virtual const char* GetType() override { return GetStaticEventType(); }
 
+    /*fw::GameObject* GetGameObject() { return m_pObject; }
+
 protected:
+    fw::GameObject* m_pObject;*/
 
 };

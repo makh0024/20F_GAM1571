@@ -12,6 +12,17 @@ Game::Game(fw::FWCore* pFramework) : fw::GameCore(pFramework)
     m_boundaryRad = 3.0f;
     m_numSides = 50;
     m_SpawnEnemyTimer = 0.0f;
+    m_SpawnHPTimer = 0.0f;
+    m_LevelTimer = 0.0f;
+    m_CurrentLevel = 1;
+
+    m_PlayerHealth = 100;
+
+    m_PlayerState = PlayerState::Alive;
+
+    m_SmolBodyTimer = 0.0f;
+    m_IsSmolBodyTimerRunning = false;
+    m_CurrentBodyRadius = 0.25f;
 }
 
 Game::~Game()
@@ -25,7 +36,7 @@ Game::~Game()
 
     delete m_pBoundaryMesh;
     delete m_pCircleMesh;
-    //delete m_pEnemyMesh;
+    delete m_pEnemyMesh;
     delete m_pPlayerController;
 
     for (fw::GameObject* pObject : m_gameObjects)
@@ -36,67 +47,143 @@ Game::~Game()
 
 void Game::Update(float deltaTime)
 {
-    float x = 1.0f / deltaTime;
+    
+        float x = 1.0f / deltaTime;
 
-    m_pEventManager->DispatchAllEvents(this);
+        m_pEventManager->DispatchAllEvents(this);
 
-    m_pImguiMan->StartFrame(deltaTime);
-    ImGui::ShowDemoWindow();
+        m_pImguiMan->StartFrame(deltaTime);
+        ImGui::ShowDemoWindow();
 
-    for (int i = 0; i < m_gameObjects.size(); i++)
-    {
-        m_gameObjects.at(i)->Update(deltaTime);
-
-        ImGui::PushID(m_gameObjects.at(i));
-        ImGui::Text("Name: %s", m_gameObjects.at(i)->GetName().c_str());
-        ImGui::SameLine();
-        if (ImGui::Button("Delete"))
+        if (m_PlayerState != PlayerState::Dead)
         {
-            m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
-        }
-
-        if ((m_pPlayer->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad - 0.25f)
+        for (int i = 0; i < m_gameObjects.size(); i++)
         {
-            fw::vec2 newpos = m_pPlayer->GetPosition() - fw::vec2(5, 5);
-            m_pPlayer->SetPosition((newpos).Normalized() * (m_boundaryRad - 0.25f) + fw::vec2(5, 5));
-        }
+            m_gameObjects.at(i)->Update(deltaTime);
 
-        if ((m_gameObjects.at(i)->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad)
-        {
-            m_pEventManager->AddEvent(new RemoveFromGameEvent(m_gameObjects.at(i)));
-        }
-
-        if ((m_gameObjects.at(i)->GetType() == fw::GameObject::Type::Enemy))
-        {
-            if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= 0.4f)
+            ImGui::PushID(m_gameObjects.at(i));
+            //ImGui::Text("Name: %s", m_gameObjects.at(i)->GetName().c_str());
+            //ImGui::SameLine();
+            /*if (ImGui::Button("Delete"))
             {
                 m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
+            }*/
+
+            if ((m_pPlayer->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad - 0.25f)
+            {
+                fw::vec2 newpos = m_pPlayer->GetPosition() - fw::vec2(5, 5);
+                m_pPlayer->SetPosition((newpos).Normalized() * (m_boundaryRad - 0.25f) + fw::vec2(5, 5));
+            }
+
+            if ((m_gameObjects.at(i)->GetPosition() - fw::vec2(5, 5)).Magnitude() > m_boundaryRad)
+            {
+                m_pEventManager->AddEvent(new RemoveFromGameEvent(m_gameObjects.at(i)));
+            }
+
+            if ((m_gameObjects.at(i)->GetType() == fw::GameObject::Type::Enemy))
+            {
+                if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= m_CurrentBodyRadius + 0.2)
+                {
+                    m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
+                    m_PlayerHealth -= 10;
+                }
+            }
+            if ((m_gameObjects.at(i)->GetType() == fw::GameObject::Type::HealthPickup))
+            {
+                if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= m_CurrentBodyRadius + 0.2)
+                {
+                    m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
+                    m_PlayerHealth += 20;
+
+                    if (m_PlayerHealth > 100)
+                        m_PlayerHealth = 100;
+                }
+            }
+            if ((m_gameObjects.at(i)->GetType() == fw::GameObject::Type::SmolBody))
+            {
+                if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= m_CurrentBodyRadius + 0.2)
+                {
+                    m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
+                    m_CurrentBodyRadius = 0.15f;
+                    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, 25, 0.0f, true);
+                    m_IsSmolBodyTimerRunning = true;
+                }
+            }
+            ImGui::PopID();
+        }
+
+        /* if (ImGui::SliderFloat("Radius", &m_boundaryRad, 0.0f, 5.0f, "%f"))
+         {
+             m_pBoundaryMesh->CreateCircle(fw::vec2(0, 0), m_boundaryRad, m_numSides, 0.0f,  false);
+         }
+
+         if (ImGui::SliderInt("Sides", &m_numSides, 3, 100, "%i"))
+         {
+             m_pBoundaryMesh->CreateCircle(fw::vec2(0, 0), m_boundaryRad, m_numSides, 0.0f, false);
+         }*/
+
+        if (ImGui::Checkbox("VSync", &m_VSyncEnabled))
+        {
+            wglSwapInterval(m_VSyncEnabled ? 1 : 0);
+        }
+
+        m_SpawnEnemyTimer += deltaTime;
+
+        if (m_SpawnEnemyTimer > 1.0f / m_CurrentLevel)
+        {
+            m_pEventManager->AddEvent(new SpawnNewEnemyEvent());
+            m_SpawnEnemyTimer = 0.0f;
+        }
+
+        m_SpawnHPTimer += deltaTime;
+
+        if (m_SpawnHPTimer > 10.0f)
+        {
+            SpawnHealthPickup(m_pPlayer->GetPosition(), m_boundaryRad);
+            SpawnSmolBody(m_pPlayer->GetPosition(), m_boundaryRad);
+            m_SpawnHPTimer = 0.0f;
+        }
+
+        ImGui::Text("Health: %d", m_PlayerHealth);
+        ImGui::Text("Level %d", m_CurrentLevel);
+        ImGui::Text("Score: %d", (int)m_LevelTimer);
+
+        if (m_PlayerState != PlayerState::Dead)
+        {
+            m_LevelTimer += deltaTime;
+        }
+
+        if (m_LevelTimer > 15.0f)
+            m_CurrentLevel = 2;
+
+        if (m_LevelTimer > 40.0f)
+            m_CurrentLevel = 3;
+
+        if (m_PlayerHealth <= 0)
+        {
+            m_PlayerState = PlayerState::Dead;
+            m_CurrentBodyRadius = 0;
+            m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, 25, 0.0f, true);
+        }
+
+        if (m_IsSmolBodyTimerRunning == true)
+        {
+            m_SmolBodyTimer += deltaTime;
+
+            if (m_SmolBodyTimer >= 5.0f)
+            {
+                m_CurrentBodyRadius = 0.25f;
+                m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, 25, 0.0f, true);
+                m_IsSmolBodyTimerRunning = false;
+                m_SmolBodyTimer = 0.0f;
             }
         }
-        ImGui::PopID();
     }
-
-    if (ImGui::SliderFloat("Radius", &m_boundaryRad, 0.0f, 5.0f, "%f"))
+    else
     {
-        m_pBoundaryMesh->CreateCircle(fw::vec2(0, 0), m_boundaryRad, m_numSides, 0.0f,  false);
-    }
-
-    if (ImGui::SliderInt("Sides", &m_numSides, 3, 100, "%i"))
-    {
-        m_pBoundaryMesh->CreateCircle(fw::vec2(0, 0), m_boundaryRad, m_numSides, 0.0f, false);
-    }
-
-    if (ImGui::Checkbox("VSync", &m_VSyncEnabled))
-    {
-        wglSwapInterval(m_VSyncEnabled ? 1 : 0);
-    }
-
-    m_SpawnEnemyTimer += deltaTime;
-
-    if (m_SpawnEnemyTimer > 0.75f)
-    {
-        m_pEventManager->AddEvent(new SpawnNewEnemyEvent());
-        m_SpawnEnemyTimer = 0.0f;
+    ImGui::Text("GAME OVER");
+    ImGui::Text("Level %d", m_CurrentLevel);
+    ImGui::Text("Score: %d", (int)m_LevelTimer);
     }
 }
 
@@ -108,11 +195,6 @@ void Game::Draw()
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
         m_gameObjects.at(i)->Draw();
-    }
-
-    for (int i = 0; i < m_pEnemies.size(); i++)
-    {
-        m_pEnemies.at(i)->Draw();
     }
 
     m_pImguiMan->EndFrame();
@@ -137,6 +219,12 @@ void Game::OnEvent(fw::Event* pEvent)
     {
         SpawnEnemy(m_pPlayer->GetPosition(), m_boundaryRad);
     }
+
+    //if (pEvent->GetType() == EnemyCollisionEvent::GetStaticEventType())
+    //{
+    //    m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
+    //    m_PlayerHealth -= 10;
+    //}
 }
 
 void Game::StartFrame(float deltaTime)
@@ -180,15 +268,28 @@ void Game::Init()
 
     m_pEnemyMesh = new fw::Mesh();
     m_pEnemyMesh->CreateCircle(fw::vec2(0, 0), 0.2f, 4, 45.0f, true);
+
     //Settings
     wglSwapInterval(m_VSyncEnabled ? 1 : 0);
 }
 
 void Game::SpawnEnemy(fw::vec2 destination, float radius)
 {
-    Enemy* m_pNewEnemy = new Enemy(destination.x, destination.y, m_boundaryRad, "Enemy" + std::to_string(m_gameObjects.size()), m_pEnemyMesh, m_pShader, fw::vec4::Blue(0.75f), this);
+    Enemy* m_pNewEnemy = new Enemy(destination.x, destination.y, radius, "Enemy" + std::to_string(m_gameObjects.size()), m_pEnemyMesh, m_pShader, fw::vec4::Blue(0.75f), this);
 
     m_gameObjects.push_back(m_pNewEnemy);
+}
 
-    //delete pEnemyMesh;
+void Game::SpawnHealthPickup(fw::vec2 destination, float radius)
+{
+    HealthPickup* pNewHP = new HealthPickup(destination.x, destination.y, radius, "Health Pickup", m_pEnemyMesh, m_pShader, fw::vec4::Red(1.0f), this);
+
+    m_gameObjects.push_back(pNewHP);
+}
+
+void Game::SpawnSmolBody(fw::vec2 destination, float radius)
+{
+    SmolBody* pNewSB = new SmolBody(destination.x, destination.y, radius, "Small Player Body", m_pEnemyMesh, m_pShader, fw::vec4::Green(1.0f), this);
+
+    m_gameObjects.push_back(pNewSB);
 }

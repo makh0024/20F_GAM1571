@@ -10,7 +10,9 @@ namespace fw {
 		{
 			Default,
 			Player,
-			Enemy
+			Enemy,
+			HealthPickup,
+			SmolBody,
 		};
 
 		Type GetType() { return m_objectType; }

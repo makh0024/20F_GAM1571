@@ -3,6 +3,8 @@
 #include "Characters/Player.h"
 #include "Characters/Shapes.h"
 #include "Characters/Enemy.h"
+#include "Characters/HealthPickup.h"
+#include "Characters/SmolBody.h"
 
 class PlayerController;
 
@@ -20,6 +22,8 @@ public:
     void Init();
 
     void SpawnEnemy(fw::vec2 destination, float radius);
+    void SpawnHealthPickup(fw::vec2 destination, float radius);
+    void SpawnSmolBody(fw::vec2 destination, float radius);
 
     Player* GetPlayer() { return m_pPlayer;  }
 protected:
@@ -48,6 +52,30 @@ protected:
     bool m_VSyncEnabled = true;
 
     float m_SpawnEnemyTimer;
+    float m_SpawnHPTimer;
 
-    std::vector<Enemy*> m_pEnemies;
+    float m_SmolBodyTimer;
+    bool m_IsSmolBodyTimerRunning;
+    float m_CurrentBodyRadius;
+
+    unsigned int m_PlayerHealth;
+
+    float m_LevelTimer;
+
+    /*enum class Level
+    {
+        Level1 = 1,
+        Level2,
+        Level3
+    };*/
+
+    enum class PlayerState
+    {
+        Alive,
+        Dead
+    };
+
+    PlayerState m_PlayerState;
+
+    unsigned int m_CurrentLevel;
 };
