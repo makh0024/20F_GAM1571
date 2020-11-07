@@ -10,6 +10,7 @@ public:
 		Down = 2,
 		Left = 4,
 		Right = 8,
+		Restart = 16,
 	};
 
 	PlayerController();
@@ -22,6 +23,7 @@ public:
 	bool IsLeftHeld()	{ return (m_Flags & Left) != 0; }
 	bool IsDownHeld()	{ return (m_Flags & Down) != 0; }
 	bool IsRightHeld()	{ return (m_Flags & Right) != 0; }
+	bool IsRestartHeld() { return (m_Flags & Restart) != 0; }
 
 	bool IsHeld(Mask mask);
 	bool WasNewlyPressed(Mask mask);

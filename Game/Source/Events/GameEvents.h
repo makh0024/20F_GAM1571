@@ -35,6 +35,38 @@ protected:
 
 };
 
+class GameOverEvent : public fw::Event
+{
+public:
+    GameOverEvent()
+    {
+        m_EventType = "GameOverEvent";
+    }
+    ~GameOverEvent() {}
+
+    static const char* GetStaticEventType() { return "GameOverEvent"; }
+    virtual const char* GetType() override { return GetStaticEventType(); }
+
+protected:
+
+};
+
+class RestartEvent : public fw::Event
+{
+public:
+    RestartEvent()
+    {
+        m_EventType = "RestartEvent";
+    }
+    ~RestartEvent() {}
+
+    static const char* GetStaticEventType() { return "RestartEvent"; }
+    virtual const char* GetType() override { return GetStaticEventType(); }
+
+protected:
+
+};
+
 class EnemyCollisionEvent : public fw::Event
 {
 public:

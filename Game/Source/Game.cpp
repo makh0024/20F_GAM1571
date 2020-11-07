@@ -6,6 +6,12 @@
 
 #include "Characters/PlayerController.h"
 
+#include "Characters/Player.h"
+#include "Characters/Shapes.h"
+#include "Characters/Enemy.h"
+#include "Characters/HealthPickup.h"
+#include "Characters/SmolBody.h"
+
 Game::Game(fw::FWCore* pFramework) : fw::GameCore(pFramework)
 {
     m_pFramework = pFramework;
@@ -37,6 +43,7 @@ Game::~Game()
     delete m_pBoundaryMesh;
     delete m_pCircleMesh;
     delete m_pEnemyMesh;
+    delete m_pPickupMesh;
     delete m_pPlayerController;
 
     for (fw::GameObject* pObject : m_gameObjects)
@@ -48,15 +55,15 @@ Game::~Game()
 void Game::Update(float deltaTime)
 {
     
-        float x = 1.0f / deltaTime;
+    float x = 1.0f / deltaTime;
 
-        m_pEventManager->DispatchAllEvents(this);
+    m_pEventManager->DispatchAllEvents(this);
 
-        m_pImguiMan->StartFrame(deltaTime);
-        ImGui::ShowDemoWindow();
+    m_pImguiMan->StartFrame(deltaTime);
+    ImGui::ShowDemoWindow();
 
-        if (m_PlayerState != PlayerState::Dead)
-        {
+     if (m_PlayerState != PlayerState::Dead)
+     {
         for (int i = 0; i < m_gameObjects.size(); i++)
         {
             m_gameObjects.at(i)->Update(deltaTime);
@@ -82,37 +89,41 @@ void Game::Update(float deltaTime)
 
             if ((m_gameObjects.at(i)->GetType() == fw::GameObject::Type::Enemy))
             {
-                if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= m_CurrentBodyRadius + 0.2)
+                if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= m_CurrentBodyRadius + 0.15)
                 {
                     m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
                     m_PlayerHealth -= 10;
+
+                    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, (m_PlayerHealth / 10) + 2 , 0.0f, true);
                 }
             }
             if ((m_gameObjects.at(i)->GetType() == fw::GameObject::Type::HealthPickup))
             {
-                if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= m_CurrentBodyRadius + 0.2)
+                if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= m_CurrentBodyRadius + 0.15)
                 {
                     m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
                     m_PlayerHealth += 20;
 
                     if (m_PlayerHealth > 100)
                         m_PlayerHealth = 100;
+
+                    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, (m_PlayerHealth / 10) + 2, 0.0f, true);
                 }
             }
             if ((m_gameObjects.at(i)->GetType() == fw::GameObject::Type::SmolBody))
             {
-                if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= m_CurrentBodyRadius + 0.2)
+                if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= m_CurrentBodyRadius + 0.15)
                 {
                     m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
                     m_CurrentBodyRadius = 0.15f;
-                    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, 25, 0.0f, true);
+                    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, (m_PlayerHealth / 10) + 2, 0.0f, true);
                     m_IsSmolBodyTimerRunning = true;
                 }
             }
             ImGui::PopID();
         }
 
-        /* if (ImGui::SliderFloat("Radius", &m_boundaryRad, 0.0f, 5.0f, "%f"))
+         /*if (ImGui::SliderFloat("Radius", &m_boundaryRad, 0.0f, 5.0f, "%f"))
          {
              m_pBoundaryMesh->CreateCircle(fw::vec2(0, 0), m_boundaryRad, m_numSides, 0.0f,  false);
          }
@@ -161,9 +172,7 @@ void Game::Update(float deltaTime)
 
         if (m_PlayerHealth <= 0)
         {
-            m_PlayerState = PlayerState::Dead;
-            m_CurrentBodyRadius = 0;
-            m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, 25, 0.0f, true);
+            m_pEventManager->AddEvent(new GameOverEvent());            
         }
 
         if (m_IsSmolBodyTimerRunning == true)
@@ -173,7 +182,7 @@ void Game::Update(float deltaTime)
             if (m_SmolBodyTimer >= 5.0f)
             {
                 m_CurrentBodyRadius = 0.25f;
-                m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, 25, 0.0f, true);
+                m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, (m_PlayerHealth / 10) + 2, 0.0f, true);
                 m_IsSmolBodyTimerRunning = false;
                 m_SmolBodyTimer = 0.0f;
             }
@@ -181,10 +190,28 @@ void Game::Update(float deltaTime)
     }
     else
     {
-    ImGui::Text("GAME OVER");
-    ImGui::Text("Level %d", m_CurrentLevel);
-    ImGui::Text("Score: %d", (int)m_LevelTimer);
+        ImGui::Text("GAME OVER");
+        ImGui::Text("Level %d", m_CurrentLevel);
+        ImGui::Text("Score: %d", (int)m_LevelTimer);
     }
+
+    if (m_pPlayerController->IsRestartHeld())
+    {
+        m_pEventManager->AddEvent(new RestartEvent());
+
+        for (int i = 0; i < m_gameObjects.size(); i++)
+        {
+            if ((m_gameObjects.at(i)->GetType() != fw::GameObject::Type::Player && m_gameObjects.at(i)->GetType() != fw::GameObject::Type::Default))
+            {
+                m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
+            }
+        }
+    }
+
+   /* if (this->GetFramework()->IsKeyDown('R'))
+    {
+        m_pEventManager->AddEvent(new RestartEvent());
+    }*/
 }
 
 void Game::Draw()
@@ -218,6 +245,28 @@ void Game::OnEvent(fw::Event* pEvent)
     if (pEvent->GetType() == SpawnNewEnemyEvent::GetStaticEventType())
     {
         SpawnEnemy(m_pPlayer->GetPosition(), m_boundaryRad);
+    }
+
+    if (pEvent->GetType() == GameOverEvent::GetStaticEventType())
+    {
+        m_PlayerState = PlayerState::Dead;
+        m_CurrentBodyRadius = 0;
+        m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, (m_PlayerHealth / 10) + 2, 0.0f, true);
+    }
+
+    if (pEvent->GetType() == RestartEvent::GetStaticEventType())
+    {
+        m_PlayerState = PlayerState::Alive;
+        m_CurrentBodyRadius = 0.25;
+        m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, (m_PlayerHealth / 10) + 3, 0.0f, true);
+        m_pPlayer->SetPosition(fw::vec2(5, 5));
+        m_CurrentLevel = 1;
+        m_PlayerHealth = 100;
+        m_SmolBodyTimer = 0.0f;
+        m_IsSmolBodyTimerRunning = false;
+        m_CurrentBodyRadius = 0.25f;
+
+        
     }
 
     //if (pEvent->GetType() == EnemyCollisionEvent::GetStaticEventType())
@@ -255,7 +304,7 @@ void Game::Init()
     m_pBoundaryMesh->CreateCircle(fw::vec2(0, 0), m_boundaryRad, m_numSides, 0.0f, false);
 
     m_pCircleMesh = new fw::Mesh();
-    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), 0.25f, 25, 0.0f, true);
+    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), 0.25f, (m_PlayerHealth / 10) + 2, 0.0f, true);
     
 
     m_pPlayerController = new PlayerController();
@@ -268,6 +317,9 @@ void Game::Init()
 
     m_pEnemyMesh = new fw::Mesh();
     m_pEnemyMesh->CreateCircle(fw::vec2(0, 0), 0.2f, 4, 45.0f, true);
+
+    m_pPickupMesh = new fw::Mesh();
+    m_pPickupMesh->CreateCircle(fw::vec2(0, 0), 0.2, 6, 0.0f, true);
 
     //Settings
     wglSwapInterval(m_VSyncEnabled ? 1 : 0);
@@ -282,14 +334,14 @@ void Game::SpawnEnemy(fw::vec2 destination, float radius)
 
 void Game::SpawnHealthPickup(fw::vec2 destination, float radius)
 {
-    HealthPickup* pNewHP = new HealthPickup(destination.x, destination.y, radius, "Health Pickup", m_pEnemyMesh, m_pShader, fw::vec4::Red(1.0f), this);
+    HealthPickup* pNewHP = new HealthPickup(destination.x, destination.y, radius, "Health Pickup", m_pPickupMesh, m_pShader, fw::vec4::Red(1.0f), this);
 
     m_gameObjects.push_back(pNewHP);
 }
 
 void Game::SpawnSmolBody(fw::vec2 destination, float radius)
 {
-    SmolBody* pNewSB = new SmolBody(destination.x, destination.y, radius, "Small Player Body", m_pEnemyMesh, m_pShader, fw::vec4::Green(1.0f), this);
+    SmolBody* pNewSB = new SmolBody(destination.x, destination.y, radius, "Small Player Body", m_pPickupMesh, m_pShader, fw::vec4::Green(1.0f), this);
 
     m_gameObjects.push_back(pNewSB);
 }

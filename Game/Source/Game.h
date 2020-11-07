@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Characters/Player.h"
-#include "Characters/Shapes.h"
-#include "Characters/Enemy.h"
-#include "Characters/HealthPickup.h"
-#include "Characters/SmolBody.h"
+class Player;
+class Shapes;
+class Enemy;
+class HealthPickup;
+class SmolBody;
 
 class PlayerController;
 
@@ -34,6 +34,7 @@ protected:
     fw::Mesh* m_pBoundaryMesh = nullptr;
     fw::Mesh* m_pCircleMesh = nullptr;
     fw::Mesh* m_pEnemyMesh = nullptr;
+    fw::Mesh* m_pPickupMesh = nullptr;
 
     std::vector<fw::GameObject*> m_gameObjects;
 
