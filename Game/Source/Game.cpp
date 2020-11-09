@@ -91,10 +91,13 @@ void Game::Update(float deltaTime)
             {
                 if ((m_pPlayer->GetPosition() - m_gameObjects.at(i)->GetPosition()).Magnitude() <= m_CurrentBodyRadius + 0.15)
                 {
+                    
                     m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
                     m_PlayerHealth -= 10;
 
                     m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, (m_PlayerHealth / 10) + 2 , 0.0f, true);
+
+                    m_pPlayer->SetColor(fw::vec4::LightOrange((float)m_PlayerHealth / 100));
                 }
             }
             if ((m_gameObjects.at(i)->GetType() == fw::GameObject::Type::HealthPickup))
@@ -108,6 +111,7 @@ void Game::Update(float deltaTime)
                         m_PlayerHealth = 100;
 
                     m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, (m_PlayerHealth / 10) + 2, 0.0f, true);
+                    m_pPlayer->SetColor(fw::vec4::LightOrange((float)m_PlayerHealth / 100));
                 }
             }
             if ((m_gameObjects.at(i)->GetType() == fw::GameObject::Type::SmolBody))
@@ -156,18 +160,16 @@ void Game::Update(float deltaTime)
         }
 
         ImGui::Text("Health: %d", m_PlayerHealth);
+        //ImGui::Text("Alpha: %f", (float)m_PlayerHealth / 100);
         ImGui::Text("Level %d", m_CurrentLevel);
         ImGui::Text("Score: %d", (int)m_LevelTimer);
 
-        if (m_PlayerState != PlayerState::Dead)
-        {
-            m_LevelTimer += deltaTime;
-        }
+        m_LevelTimer += deltaTime;        
 
         if (m_LevelTimer > 15.0f)
             m_CurrentLevel = 2;
 
-        if (m_LevelTimer > 40.0f)
+        if (m_LevelTimer > 45.0f)
             m_CurrentLevel = 3;
 
         if (m_PlayerHealth <= 0)
@@ -193,17 +195,14 @@ void Game::Update(float deltaTime)
         ImGui::Text("GAME OVER");
         ImGui::Text("Level %d", m_CurrentLevel);
         ImGui::Text("Score: %d", (int)m_LevelTimer);
+        ImGui::Text("Dev HighScore: 103");
+        ImGui::Text("Press R to Restart!");
     }
 
     if (m_pPlayerController->IsRestartHeld())
     {
         m_pEventManager->AddEvent(new RestartEvent());
     }
-
-   /* if (this->GetFramework()->IsKeyDown('R'))
-    {
-        m_pEventManager->AddEvent(new RestartEvent());
-    }*/
 }
 
 void Game::Draw()
@@ -249,14 +248,15 @@ void Game::OnEvent(fw::Event* pEvent)
     if (pEvent->GetType() == RestartEvent::GetStaticEventType())
     {
         m_PlayerState = PlayerState::Alive;
-        m_CurrentBodyRadius = 0.25;
+        m_CurrentBodyRadius = 0.25f;
         m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, (m_PlayerHealth / 10) + 3, 0.0f, true);
         m_pPlayer->SetPosition(fw::vec2(5, 5));
         m_CurrentLevel = 1;
         m_PlayerHealth = 100;
+        m_pPlayer->SetColor(fw::vec4::LightOrange(1.0f));
         m_SmolBodyTimer = 0.0f;
         m_IsSmolBodyTimerRunning = false;
-        m_CurrentBodyRadius = 0.25f;
+        m_LevelTimer = 0.0f;
 
         for (int i = 0; i < m_gameObjects.size(); i++)
         {
@@ -306,7 +306,7 @@ void Game::Init()
     
 
     m_pPlayerController = new PlayerController();
-    m_pPlayer = new Player(5.0f, 5.0f, "Circle", m_pPlayerController, m_pCircleMesh, m_pShader, fw::vec4::LightOrange(0.9f), this);
+    m_pPlayer = new Player(5.0f, 5.0f, "Circle", m_pPlayerController, m_pCircleMesh, m_pShader, fw::vec4::LightOrange(1.0f), this);
     
     fw::GameObject* m_pBoundary = new fw::GameObject(5.0f, 5.0f, "Boundary", m_pBoundaryMesh, m_pShader, fw::vec4::White(1), this, fw::GameObject::Type::Default);
 

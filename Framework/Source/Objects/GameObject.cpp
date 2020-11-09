@@ -50,6 +50,11 @@ void GameObject::SetPosition(fw::vec2 newpos)
 	m_Pos = newpos;
 }
 
+void fw::GameObject::SetColor(vec4 color)
+{
+	m_Color = color;
+}
+
 fw::vec2 GameObject::GetPosition()
 {
 	return fw::vec2(m_Pos);

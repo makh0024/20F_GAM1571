@@ -22,6 +22,7 @@ Enemy::Enemy(float x, float y, float radius, std::string Name, Mesh* Mesh, Shade
 
 Enemy::~Enemy()
 {
+	
 }
 
 void Enemy::Update(float deltaTime)

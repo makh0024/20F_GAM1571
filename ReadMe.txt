@@ -9,3 +9,7 @@ Extra Features/ Polish:
 -Sides of the player change based on Health.
 -GAME OVER State
 -Press R to Restart Game.
+-Player's Alpha changes reflecting it's Health.
+
+PS: My HighScore is 103. Feel free to DM me yours!
+Also, there is no Win Condition, it's an endless runner.

@@ -30,6 +30,8 @@ namespace fw {
 		fw::vec2 GetPosition();
 		void SetPosition(fw::vec2 newpos);
 
+		void SetColor(vec4 color);
+
 	protected:
 		fw::vec2 m_Pos = fw::vec2(0.0f, 0.0f);
 		fw::vec4 m_Color = fw::vec4(0, 0, 0, 0);
