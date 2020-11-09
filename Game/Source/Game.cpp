@@ -198,14 +198,6 @@ void Game::Update(float deltaTime)
     if (m_pPlayerController->IsRestartHeld())
     {
         m_pEventManager->AddEvent(new RestartEvent());
-
-        for (int i = 0; i < m_gameObjects.size(); i++)
-        {
-            if ((m_gameObjects.at(i)->GetType() != fw::GameObject::Type::Player && m_gameObjects.at(i)->GetType() != fw::GameObject::Type::Default))
-            {
-                m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
-            }
-        }
     }
 
    /* if (this->GetFramework()->IsKeyDown('R'))
@@ -266,7 +258,13 @@ void Game::OnEvent(fw::Event* pEvent)
         m_IsSmolBodyTimerRunning = false;
         m_CurrentBodyRadius = 0.25f;
 
-        
+        for (int i = 0; i < m_gameObjects.size(); i++)
+        {
+            if ((m_gameObjects.at(i)->GetType() != fw::GameObject::Type::Player && m_gameObjects.at(i)->GetType() != fw::GameObject::Type::Default))
+            {
+                m_pEventManager->AddEvent(new RemoveFromGameEvent((m_gameObjects.at(i))));
+            }
+        }
     }
 
     //if (pEvent->GetType() == EnemyCollisionEvent::GetStaticEventType())
@@ -304,7 +302,7 @@ void Game::Init()
     m_pBoundaryMesh->CreateCircle(fw::vec2(0, 0), m_boundaryRad, m_numSides, 0.0f, false);
 
     m_pCircleMesh = new fw::Mesh();
-    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), 0.25f, (m_PlayerHealth / 10) + 2, 0.0f, true);
+    m_pCircleMesh->CreateCircle(fw::vec2(0, 0), m_CurrentBodyRadius, (m_PlayerHealth / 10) + 2, 0.0f, true);
     
 
     m_pPlayerController = new PlayerController();

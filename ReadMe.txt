@@ -8,3 +8,4 @@ Extra Features/ Polish:
 -Level and Health are displayed.
 -Sides of the player change based on Health.
 -GAME OVER State
+-Press R to Restart Game.
