@@ -35,6 +35,22 @@ protected:
 
 };
 
+class SpawnPickupsEvent : public fw::Event
+{
+public:
+    SpawnPickupsEvent()
+    {
+        m_EventType = "SpawnPickupsEvent";
+    }
+    ~SpawnPickupsEvent() {}
+
+    static const char* GetStaticEventType() { return "SpawnPickupsEvent"; }
+    virtual const char* GetType() override { return GetStaticEventType(); }
+
+protected:
+
+};
+
 class GameOverEvent : public fw::Event
 {
 public:

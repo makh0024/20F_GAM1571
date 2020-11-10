@@ -154,9 +154,7 @@ void Game::Update(float deltaTime)
 
         if (m_SpawnHPTimer > 10.0f)
         {
-            SpawnHealthPickup(m_pPlayer->GetPosition(), m_boundaryRad);
-            SpawnSmolBody(m_pPlayer->GetPosition(), m_boundaryRad);
-            m_SpawnHPTimer = 0.0f;
+            m_pEventManager->AddEvent(new SpawnPickupsEvent());
         }
 
         ImGui::Text("Health: %d", m_PlayerHealth);
@@ -238,6 +236,13 @@ void Game::OnEvent(fw::Event* pEvent)
         SpawnEnemy(m_pPlayer->GetPosition(), m_boundaryRad);
     }
 
+    if (pEvent->GetType() == SpawnPickupsEvent::GetStaticEventType())
+    {
+        SpawnHealthPickup(m_pPlayer->GetPosition(), m_boundaryRad);
+        SpawnSmolBody(m_pPlayer->GetPosition(), m_boundaryRad);
+        m_SpawnHPTimer = 0.0f;
+    }
+
     if (pEvent->GetType() == GameOverEvent::GetStaticEventType())
     {
         m_PlayerState = PlayerState::Dead;
@@ -257,6 +262,7 @@ void Game::OnEvent(fw::Event* pEvent)
         m_SmolBodyTimer = 0.0f;
         m_IsSmolBodyTimerRunning = false;
         m_LevelTimer = 0.0f;
+        m_SpawnHPTimer = 0.0f;
 
         for (int i = 0; i < m_gameObjects.size(); i++)
         {
