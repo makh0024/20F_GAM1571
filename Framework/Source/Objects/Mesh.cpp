@@ -99,9 +99,9 @@ namespace fw {
 
         std::vector<float> m_Vertices;
 
-        float angleOffset = Offset * 3.1415926 / 180.0f;
+        float angleOffset = Offset * 3.1415926f / 180.0f;
 
-        float angle = (2 * 3.1415926 / NumVertices);
+        float angle = (2 * 3.1415926f / NumVertices);
         
         for (int i = 0; i < NumVertices; i++)
         {
@@ -149,13 +149,13 @@ namespace fw {
 
     void Mesh::SetUniform2f(ShaderProgram* pShader, char* name, vec2 position)
     {
-        float loc = glGetUniformLocation(pShader->GetProgram(), name);
+        GLint loc = glGetUniformLocation(pShader->GetProgram(), name);
         glUniform2f(loc, position.x, position.y);
     }
 
     void Mesh::SetUniform4f(ShaderProgram* pShader, char* name, vec4 color)
     {
-        float loc = glGetUniformLocation(pShader->GetProgram(), name);
+        GLint loc = glGetUniformLocation(pShader->GetProgram(), name);
         glUniform4f(loc, color.x, color.y, color.z, color.w);
     }
 

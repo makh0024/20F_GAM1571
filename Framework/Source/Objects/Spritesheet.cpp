@@ -9,7 +9,7 @@ fw::Spritesheet::Spritesheet(char* fileloc)
 
     delete[] jsonFile;
 
-    for (int i = 0; i < m_doc["Sprites"].Size(); i++)
+    for (unsigned int i = 0; i < m_doc["Sprites"].Size(); i++)
     {
         std::string SpriteName = m_doc["Sprites"][i]["Name"].GetString();
         int OffsetX = m_doc["Sprites"][i]["X"].GetInt();
@@ -42,4 +42,6 @@ fw::Sprite* fw::Spritesheet::GetSpriteInfo(std::string spriteName)
             return m_Sprites[i];
         }
     }
+
+    return nullptr;
 }

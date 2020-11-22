@@ -9,9 +9,9 @@ Enemy::Enemy(float x, float y, float radius, std::string Name, Mesh* Mesh, Shade
 
 	m_SpawnRadius = radius;
 
-	float angle = rand() % 360;
+	float angle = (float)(rand() % 360);
 
-	angle *= 3.1415926 / 180;
+	angle *= 3.1415926f / 180.0f;
 
 	m_Pos = fw::vec2(5, 5) + (fw::vec2(cos(angle), sin(angle)) * m_SpawnRadius);
 
