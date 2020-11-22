@@ -72,7 +72,7 @@ void Game::Update(float deltaTime)
 
 void Game::Draw()
 {
-    glClearColor(0.1, 0.1, 0.1, 1);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     for (int i = 0; i < m_gameObjects.size(); i++)
