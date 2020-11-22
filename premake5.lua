@@ -4,29 +4,57 @@
 	
 	location 	   "build"
 	characterset   "MBCS"
-	startproject   "Game"
+	startproject   "GameCustom"
 	
 	filter "configurations:Debug"
 	symbols "on"
 	
-project "Game"
+-- project "Game"
+	-- kind	 "WindowedApp"
+	-- location "build/Game"
+	-- debugdir "Game"
+	
+	-- files {
+		-- "Game/Source/**.cpp",
+		-- "Game/Source/**.h",
+		-- "Game/Data/**.vert",
+		-- "Game/Data/**.frag",
+		-- "premake5.lua",
+		-- "GenerateProjectFiles.bat",
+		-- ".gitignore",
+	-- }
+	
+	-- includedirs {
+		-- "Framework/Source",
+		-- "Game/Source",
+	-- }
+	
+	-- links {
+		-- "Framework",
+		-- "opengl32",
+	-- }
+	
+	-- pchheader "GamePCH.h"
+	-- pchsource "Game/Source/WinMain.cpp"
+	
+project "GameCustom"
 	kind	 "WindowedApp"
-	location "build/Game"
-	debugdir "Game"
+	location "build/GameCustom"
+	debugdir "GameCustom"
 	
 	files {
-		"Game/Source/**.cpp",
-		"Game/Source/**.h",
-		"Game/Data/**.vert",
-		"Game/Data/**.frag",
+		"GameCustom/Source/**.cpp",
+		"GameCustom/Source/**.h",
+		"GameCustom/Data/**.vert",
+		"GameCustom/Data/**.frag",
+		"GameCustom/Data/**.json",
 		"premake5.lua",
 		"GenerateProjectFiles.bat",
 		".gitignore",
 	}
 	
 	includedirs {
-		"Framework/Source",
-		"Game/Source",
+		"GameCustom/Source",
 	}
 	
 	links {
@@ -35,7 +63,7 @@ project "Game"
 	}
 	
 	pchheader "GamePCH.h"
-	pchsource "Game/Source/WinMain.cpp"
+	pchsource "GameCustom/Source/WinMain.cpp"
 	
 project "Framework"
 	kind 		"StaticLib"
@@ -44,8 +72,8 @@ project "Framework"
 	files {
 		"Framework/Source/**.cpp",
 		"Framework/Source/**.h",
-		"Framework/Libraries/imgui/**.cpp",
-		"Framework/Libraries/imgui/**.h",
+		"Framework/Libraries/**.cpp",
+		"Framework/Libraries/**.h",
 	}
 	
 	includedirs {

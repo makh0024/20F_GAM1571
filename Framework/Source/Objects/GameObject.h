@@ -3,6 +3,9 @@
 
 namespace fw {
 
+	class Texture;
+
+
 	class GameObject
 	{
 	public:
@@ -25,6 +28,8 @@ namespace fw {
 
 		std::string GetName();
 
+		void SetTexture(Texture* pTexture) { m_pTexture = pTexture; }
+
 		void SetParameters(Mesh* Mesh, ShaderProgram* Shader);
 
 		fw::vec2 GetPosition();
@@ -43,6 +48,11 @@ namespace fw {
 
 		std::string m_Name;
 
+		Texture* m_pTexture = nullptr;
+
 		Type m_objectType;
+
+		vec2 m_UVScale = vec2(1, 1);
+		vec2 m_UVOffset = vec2(0, 0);
 	};
 }

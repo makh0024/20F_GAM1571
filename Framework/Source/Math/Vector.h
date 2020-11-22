@@ -51,6 +51,8 @@ namespace fw
 		float DotProduct(vec2 o);
 
 		void SetValues(float o, float o2);
+
+
 	};
 
 	class vec3

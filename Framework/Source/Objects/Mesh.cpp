@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Utility/ShaderProgram.h"
 #include "Utility/Helpers.h"
+#include "Objects/Texture.h"
 
 namespace fw {
 
@@ -9,12 +10,17 @@ namespace fw {
     {
     }
 
+    Mesh::Mesh(int primitiveType, int numVertices, const VertexFormat* pVertices)
+    {
+        CreateShape(numVertices, primitiveType, pVertices);
+    }
+
     Mesh::~Mesh()
     {
         glDeleteBuffers(1, &m_VBO);
     }
 
-    void Mesh::Draw(vec2 pos, vec4 color, ShaderProgram* Shader)
+    void Mesh::Draw(vec2 pos, vec4 color, ShaderProgram* Shader, Texture* pTexture, vec2 UVScale, vec2 UVOffset)
     {
         glUseProgram(Shader->GetProgram()); 
 
@@ -22,28 +28,51 @@ namespace fw {
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 
         // Get the attribute variable?s location from the shader.
-        GLint loc = 0; //glGetAttribLocation( m_pShader->m_Program, "a_Position" );
-        glEnableVertexAttribArray(loc);
+        //GLint loc = 0; //glGetAttribLocation( m_pShader->m_Program, "a_Position" );
+        //glEnableVertexAttribArray(loc);
+
+        GLint loc = glGetAttribLocation(Shader->GetProgram(), "a_Position");
+        if (loc != -1)
+        {
+            glEnableVertexAttribArray(loc);
+            glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, 16, (void*)0);
+        }
 
         // Describe the attributes in the VBO to OpenGL.
-        glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, 8, (void*)0);
+        loc = glGetAttribLocation(Shader->GetProgram(), "a_UVCoord");
+        if (loc != -1)
+        {
+            glEnableVertexAttribArray(loc);
+            glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, 16, (void*)8);
+        }
 
         //assert(x == 0.0f);
         //Setup our uniforms
         {
             SetUniform1f(Shader, "u_Time", (float)GetSystemTimeSinceGameStart());
-            SetUniform2f(Shader, "u_Increment", pos);
+            SetUniform2f(Shader, "u_ObjectPos", pos);
             SetUniform4f(Shader, "u_Color", color);
-            /*int timeLocation = glGetUniformLocation(Shader->GetProgram(), "u_Time");
-            glUniform1f(timeLocation, GetSystemTimeSinceGameStart());*/
+
+            SetUniform2f(Shader, "u_UVScale", UVScale);
+            SetUniform2f(Shader, "u_UVOffset", UVOffset);
+
+            if (pTexture != nullptr)
+            {
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, pTexture->GetHandle());
+                SetUniform1i(Shader, "u_Texture", 0);
+            }
         }
 
         // Draw the primitive.
         glDrawArrays(m_PrimitiveType, 0, m_NumVertices);
     }
 
-    void Mesh::CreateShape(const int NumVertices, const int PrimitiveType, const float* attribs)
+    void Mesh::CreateShape(const int NumVertices, const int PrimitiveType, const VertexFormat* attribs)
     {
+        // delete if we have an exisiting buffer
+        glDeleteBuffers(1, &m_VBO);
+        
         // Generate a buffer for our vertex attributes.
         glGenBuffers(1, &m_VBO); // m_VBO is a GLuint.
 
@@ -58,7 +87,7 @@ namespace fw {
 
         // Copy our attribute data into the VBO.
         int numAttributeComponents = m_NumVertices * 2; // x & y for each vertex.
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numAttributeComponents, attribs, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(VertexFormat) * m_NumVertices, attribs, GL_STATIC_DRAW);
     }
 
     void Mesh::CreateCircle(vec2 centerPos, float radius, int NumVertices, float Offset, bool IsFilled)
@@ -130,4 +159,9 @@ namespace fw {
         glUniform4f(loc, color.x, color.y, color.z, color.w);
     }
 
+    void Mesh::SetUniform1i(ShaderProgram* pShader, char* name, int value)
+    {
+        int loc = glGetUniformLocation(pShader->GetProgram(), name);
+        glUniform1i(loc, value);
+    }
 } // namespace fw

@@ -457,7 +457,7 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                     InputEvent::DeviceState::Pressed,
                     (unsigned int)wParam);
 
-                pFWCore->m_pGame->GetEventManager()->AddEvent(pEvent);
+                pFWCore->m_pGame->GetEventManager()->AddEvent(pEvent, 0);
             }
         }
         return 0;
@@ -471,7 +471,7 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                 InputEvent::DeviceState::Released,
                 (unsigned int)wParam);
 
-            pFWCore->m_pGame->GetEventManager()->AddEvent(pEvent);
+            pFWCore->m_pGame->GetEventManager()->AddEvent(pEvent, 0);
         }
         return 0;
 

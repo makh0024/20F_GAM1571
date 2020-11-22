@@ -18,7 +18,9 @@
 #include "Utility/ShaderProgram.h"
 
 #include "Objects/Mesh.h"
+#include "Objects/Texture.h"
 #include "Objects/GameObject.h"
+#include "Objects/Spritesheet.h"
 
 #include "Math/Vector.h"
 

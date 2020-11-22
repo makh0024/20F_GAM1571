@@ -4,6 +4,8 @@ namespace fw {
 
     class Event
     {
+        friend class EventManager;
+
     public:
         Event();
         virtual ~Event();
@@ -12,6 +14,10 @@ namespace fw {
 
     protected:
         std::string m_EventType = "BaseEvent";
+
+        void SetDelay(float delay) { m_Delay = delay; }
+
+        float m_Delay = 0.0f;
     };
 
     class InputEvent : public Event

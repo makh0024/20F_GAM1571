@@ -93,6 +93,7 @@ void operator delete[](void* m, char* file, unsigned long line)
 
 void* operator new(size_t size)
 {
+
     assert( size > 0 );
 
     MemObject* mo = (MemObject*)malloc( size + sizeof(MemObject) );

@@ -11,13 +11,11 @@ namespace fw {
         EventManager();
         ~EventManager();
 
-        void AddEvent(Event* pEvent);
-        void DispatchAllEvents(GameCore* pGameCore);
+        void AddEvent(Event* pEvent, float delayBeforeSending);
+        void DispatchAllEvents(float deltaTime, GameCore* pGameCore);
 
     protected:
-        //GameCore* m_pGameCore;
 
-        //std::queue<Event*> m_Events;
         std::queue<Event*> m_EventQueue;
     };
 
