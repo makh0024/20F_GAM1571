@@ -6,14 +6,14 @@ using TT = Tilemap::TileType;
 
 const Tilemap::TileType level1Layout[] =
 {
-	TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall,
-	TT::Wall, TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Wall,
-	TT::Wall, TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Wall ,TT::Floor,TT::Floor,TT::Wall,
-	TT::Wall, TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Wall,
-	TT::Wall, TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Wall,
-	TT::Wall, TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Wall,
-	TT::Wall, TT::Floor,TT::Floor,TT::Wall ,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Wall,
-	TT::Wall, TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Wall,
-	TT::Wall, TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Floor,TT::Wall,
-	TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall, TT::Wall,
+	TT::WallNW,		TT::WallNorth,	TT::WallNorth,	TT::WallNorth,	TT::WallNorth,	TT::WallNorth,	TT::WallNorth,	TT::WallNorth,	TT::WallNorth,	TT::WallNE,
+	TT::WallWest, TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::WallEast,
+	TT::WallWest, TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::WallEast,
+	TT::WallWest, TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::WallEast,
+	TT::WallWest, TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::WallEast,
+	TT::WallWest, TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::WallEast,
+	TT::WallWest, TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::WallEast,
+	TT::WallWest, TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::WallEast,
+	TT::WallWest, TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::WallEast,
+	TT::WallSW,		TT::WallSouth,	 TT::WallSouth,		TT::WallSouth,	TT::WallSouth,	TT::WallSouth,	TT::WallSouth,	 TT::WallSouth,		TT::WallSouth,	 TT::WallSE,
 };

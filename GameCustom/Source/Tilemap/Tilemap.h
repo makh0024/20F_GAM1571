@@ -22,6 +22,14 @@ public:
 	{
 		Floor = 0,
 		Wall = 1,
+		WallNorth = 2,
+		WallSouth = 3,
+		WallEast = 4,
+		WallWest = 5,
+		WallNE = 6,
+		WallNW = 7,
+		WallSE = 8,
+		WallSW = 9,
 		NumTypes
 	};
 
@@ -49,7 +57,7 @@ private:
 	
 	fw::vec2 m_MapSize;
 	
-	fw::vec2 m_TileSize = fw::vec2(1.0f, 1.5f);
+	fw::vec2 m_TileSize = fw::vec2(1.5f, 1.5f);
 
 	fw::vec2 m_UVScale = fw::vec2(1, 1);
 	fw::vec2 m_UVOffset = fw::vec2(0, 0);

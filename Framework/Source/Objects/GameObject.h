@@ -39,7 +39,7 @@ namespace fw {
 
 	protected:
 		fw::vec2 m_Pos = fw::vec2(0.0f, 0.0f);
-		fw::vec2 m_Scale = fw::vec2(1.0f, 1.0f);
+		fw::vec2 m_Scale = fw::vec2(1.f, 1.f);
 		fw::vec4 m_Color = fw::vec4(0, 0, 0, 0);
 
 		Mesh* m_pMesh = nullptr;

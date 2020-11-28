@@ -41,6 +41,14 @@ void Tilemap::SetTilemap()
 
 	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Floor"), true));
 	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall"), true));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-N"), true));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-S"), true));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-E"), true));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-W"), true));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-NE"), true));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-NW"), true));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-SE"), true));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-SW"), true));
 }
 
 
@@ -66,7 +74,7 @@ void Tilemap::Draw()
 	{
 		for (int x = 0; x < m_MapSize.x; x++)
 		{
-			m_TilePos = fw::vec2((float)x, (float)y);
+			m_TilePos = fw::vec2((float)x, (float)(m_MapSize.y -y -1));
 
 			int TileIndex = y * (int)m_MapSize.x + x;
 
@@ -74,7 +82,7 @@ void Tilemap::Draw()
 
 			TileProperties properties = m_pTileProperties[(int)type];
 
-			m_pTileMesh->Draw(m_TilePos, m_TileSize, m_PlayerPos, m_Color, m_pShader, m_pTexture, properties.m_UVScale, properties.m_UVOffset);
+			m_pTileMesh->Draw(m_TilePos * m_TileSize, m_TileSize, m_PlayerPos, m_Color, m_pShader, m_pTexture, properties.m_UVScale, properties.m_UVOffset);
 		}
 	}
 }
