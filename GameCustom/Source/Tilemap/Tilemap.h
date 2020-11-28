@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 struct TileProperties
 {
 	bool bIsWalkable;
@@ -31,6 +29,8 @@ public:
 	void SetTilemap();
 	~Tilemap();
 
+	void SendPlayerPos(fw::vec2 playerPos);
+
 	void Draw();
 protected:
 	std::vector<TileProperties> m_pTileProperties;
@@ -54,4 +54,5 @@ private:
 	fw::vec2 m_UVScale = fw::vec2(1, 1);
 	fw::vec2 m_UVOffset = fw::vec2(0, 0);
 
+	fw::vec2 m_PlayerPos;
 };

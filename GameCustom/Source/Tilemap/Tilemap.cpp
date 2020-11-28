@@ -2,6 +2,7 @@
 #include "Tilemap.h"
 #include "Layout.h"
 #include "../Characters/Shapes.h"
+#include "../Characters/Player.h"
 
 using namespace fw;
 
@@ -16,7 +17,9 @@ Tilemap::Tilemap(int width, int height, const TileType* pLayout)
 	{
 		m_pLayout[i] = pLayout[i];
 	}
+
 	SetTilemap();
+
 }
 
 void Tilemap::SetTilemap()
@@ -52,6 +55,11 @@ Tilemap::~Tilemap()
 	delete[] m_pLayout;
 }
 
+void Tilemap::SendPlayerPos(fw::vec2 playerPos)
+{
+	m_PlayerPos = playerPos;
+}
+
 void Tilemap::Draw()
 {
 	for (int y = 0; y < m_MapSize.y; y++)
@@ -66,7 +74,7 @@ void Tilemap::Draw()
 
 			TileProperties properties = m_pTileProperties[(int)type];
 
-			m_pTileMesh->Draw(m_TilePos, m_TileSize, m_Color, m_pShader, m_pTexture, properties.m_UVScale, properties.m_UVOffset);
+			m_pTileMesh->Draw(m_TilePos, m_TileSize, m_PlayerPos, m_Color, m_pShader, m_pTexture, properties.m_UVScale, properties.m_UVOffset);
 		}
 	}
 }

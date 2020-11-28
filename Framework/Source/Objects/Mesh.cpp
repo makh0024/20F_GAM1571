@@ -20,7 +20,7 @@ namespace fw {
         glDeleteBuffers(1, &m_VBO);
     }
 
-    void Mesh::Draw(vec2 pos, vec2 scale, vec4 color, ShaderProgram* Shader, Texture* pTexture, vec2 UVScale, vec2 UVOffset)
+    void Mesh::Draw(vec2 pos, vec2 scale, vec2 camera, vec4 color, ShaderProgram* Shader, Texture* pTexture, vec2 UVScale, vec2 UVOffset)
     {
         glUseProgram(Shader->GetProgram()); 
 
@@ -51,6 +51,7 @@ namespace fw {
         {
             SetUniform1f(Shader, "u_Time", (float)GetSystemTimeSinceGameStart());
             SetUniform2f(Shader, "u_ObjectScale", scale);
+            SetUniform2f(Shader, "u_CameraPos", camera);
             SetUniform2f(Shader, "u_ObjectPos", pos);
             SetUniform4f(Shader, "u_Color", color);
 

@@ -32,7 +32,7 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::Draw()
 {	
-	m_pMesh->Draw(m_Pos, m_Scale, m_Color, m_pShader, m_pTexture, m_UVScale, m_UVOffset);
+	m_pMesh->Draw(m_Pos, m_Scale, m_Pos, m_Color, m_pShader, m_pTexture, m_UVScale, m_UVOffset);
 }
 
 std::string fw::GameObject::GetName()

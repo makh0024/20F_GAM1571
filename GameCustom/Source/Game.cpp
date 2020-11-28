@@ -59,6 +59,8 @@ void Game::Update(float deltaTime)
     m_pImguiMan->StartFrame(deltaTime);
     ImGui::ShowDemoWindow();
 
+    m_pTilemap->SendPlayerPos(m_pPlayer->GetPosition());
+
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
         m_gameObjects.at(i)->Update(deltaTime);
