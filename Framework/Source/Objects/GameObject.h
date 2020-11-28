@@ -20,7 +20,7 @@ namespace fw {
 
 		Type GetType() { return m_objectType; }
 	public:
-		GameObject(float x, float y, std::string Name, Mesh* Mesh, ShaderProgram* Shader, vec4 color, GameCore* pGameCore, Type objectType);
+		GameObject(float x, float y, std::string Name, Mesh* Mesh, ShaderProgram* Shader, vec4 color, GameCore* pGameCore, Type objectType, vec2 scale);
 		~GameObject();
 
 		virtual void Update(float deltaTime);
@@ -39,6 +39,7 @@ namespace fw {
 
 	protected:
 		fw::vec2 m_Pos = fw::vec2(0.0f, 0.0f);
+		fw::vec2 m_Scale = fw::vec2(1.0f, 1.0f);
 		fw::vec4 m_Color = fw::vec4(0, 0, 0, 0);
 
 		Mesh* m_pMesh = nullptr;

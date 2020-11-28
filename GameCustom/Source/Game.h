@@ -1,12 +1,8 @@
 #pragma once
 
 class Player;
-class Shapes;
-class Enemy;
-class HealthPickup;
-class SmolBody;
-
 class PlayerController;
+class Tilemap;
 
 class Game : public fw::GameCore
 {
@@ -42,7 +38,9 @@ protected:
 
     fw::FWCore* m_pFramework = nullptr;
 
-    PlayerController* m_pPlayerController;
+    PlayerController* m_pPlayerController; 
+
+    Tilemap* m_pTilemap;
 
     //Settings
     bool m_VSyncEnabled = true;

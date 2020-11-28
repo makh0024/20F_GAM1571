@@ -1,6 +1,5 @@
 #include "GamePCH.h"
 
-#include "Game.h"
 
 #include "Events/GameEvents.h"
 
@@ -8,6 +7,9 @@
 
 #include "Characters/Player.h"
 #include "Characters/Shapes.h"
+#include "Tilemap/Tilemap.h"
+#include "Tilemap/Layout.h"
+#include "Game.h"
 
 Game::Game(fw::FWCore* pFramework) : fw::GameCore(pFramework)
 {
@@ -23,6 +25,8 @@ Game::~Game()
     delete m_pPlayerController;
 
     delete m_pSpritesheet;
+
+    delete m_pTilemap;
 
     for (fw::GameObject* pObject : m_gameObjects)
     {
@@ -75,10 +79,13 @@ void Game::Draw()
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    m_pTilemap->Draw();
+   
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
         m_gameObjects.at(i)->Draw();
     }
+
 
     m_pImguiMan->EndFrame();
 }
@@ -130,7 +137,7 @@ void Game::Init()
     m_pSpritesheet = new fw::Spritesheet("Data/Textures/Bomberman.json");
 
     //Create GameObjects
-    m_pPlayer = new Player(5.0f, 5.0f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet);
+    m_pPlayer = new Player(5.0f, 5.0f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.75f, 1.5f));
     m_pPlayer->SetTexture(m_pTextures["Player"]);
 
     //m_pPlayer2 = new Player(0.5f, 0.5f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet);
@@ -140,4 +147,7 @@ void Game::Init()
 
     //Settings
     wglSwapInterval(m_VSyncEnabled ? 1 : 0);
+
+    //Tilemap Settings
+    m_pTilemap = new Tilemap(10, 10, level1Layout);
 }

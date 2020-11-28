@@ -1,0 +1,57 @@
+#pragma once
+
+
+
+struct TileProperties
+{
+	bool bIsWalkable;
+	fw::vec2 m_UVScale;
+	fw::vec2 m_UVOffset;
+
+	TileProperties(fw::Sprite* SpriteInfo, bool walkable)
+	{
+		bIsWalkable = walkable;
+
+		m_UVScale = fw::vec2(SpriteInfo->m_ScaleX / 256.0f, SpriteInfo->m_ScaleY / 128.0f);
+		m_UVOffset = fw::vec2(SpriteInfo->m_OffsetX / 256.0f, SpriteInfo->m_OffsetY / 128.0f);
+	}
+};
+
+class Tilemap
+{
+public:
+	enum class TileType
+	{
+		Floor = 0,
+		Wall = 1,
+		NumTypes
+	};
+
+	Tilemap(int width, int height, const TileType* pLayout);
+	void SetTilemap();
+	~Tilemap();
+
+	void Draw();
+protected:
+	std::vector<TileProperties> m_pTileProperties;
+	TileType* m_pLayout;
+
+	fw::Spritesheet* m_pSpritesheet = nullptr;
+	fw::Sprite* m_pTileSprite;
+
+private:
+	fw::Mesh* m_pTileMesh;
+	fw::vec2 m_TilePos;
+	fw::vec4 m_Color = fw::vec4(0, 0, 0, 0);
+
+	fw::ShaderProgram* m_pShader = nullptr;
+	fw::Texture* m_pTexture = nullptr;
+	
+	fw::vec2 m_MapSize;
+	
+	fw::vec2 m_TileSize = fw::vec2(1.0f, 1.5f);
+
+	fw::vec2 m_UVScale = fw::vec2(1, 1);
+	fw::vec2 m_UVOffset = fw::vec2(0, 0);
+
+};

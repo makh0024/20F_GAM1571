@@ -7,7 +7,7 @@ class Player : public fw::GameObject
 {
 public:
 	Player(float x, float y, std::string Name, PlayerController* pPlayerController,
-		fw::Mesh* Mesh, fw::ShaderProgram* Shader, fw::vec4 color, fw::GameCore* pGameCore, fw::Spritesheet* pSpritesheet);
+		fw::Mesh* Mesh, fw::ShaderProgram* Shader, fw::vec4 color, fw::GameCore* pGameCore, fw::Spritesheet* pSpritesheet, fw::vec2 playerScale);
 	~Player();
 
 	void Update(float deltaTime);

@@ -29,7 +29,7 @@ namespace fw
 		Mesh(int primitiveType, int numVertices, const VertexFormat* pVertices);
 		~Mesh();
 
-		void Draw(vec2 pos, vec4 color, ShaderProgram* Shader, Texture* pTexture, vec2 UVScale, vec2 UVOffset);
+		void Draw(vec2 pos, vec2 scale, vec4 color, ShaderProgram* Shader, Texture* pTexture, vec2 UVScale, vec2 UVOffset);
 
 		//void CreateHumanoid();
 		//void CreateAnimal();

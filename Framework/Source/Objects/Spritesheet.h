@@ -26,6 +26,9 @@ namespace fw
 
 		Sprite* GetSpriteInfo(std::string spriteName);
 
+		int m_Width;
+		int m_Height;
+
 	protected:
 		rapidjson::Document m_doc;
 

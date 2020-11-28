@@ -82,4 +82,16 @@ namespace fw
 		static const vec4 Black(float alpha)		{ return vec4(0, 0, 0, alpha); }
 		static const vec4 LightOrange(float alpha)	{ return vec4(0.96f, 0.556f, 0.366f, alpha); }
 	};
+
+	class ivec2
+	{
+	public:
+		ivec2() { x = 0, y = 0; }
+		ivec2(int ax, int ay) {  x = ax, y = ay; }
+
+		void Set(int nx, int ny) { x = nx; y = ny; }
+
+	public:
+		int x, y;
+	};
 }

@@ -9,6 +9,9 @@ fw::Spritesheet::Spritesheet(char* fileloc)
 
     delete[] jsonFile;
 
+    m_Width = m_doc["Width"].GetInt();
+    m_Height = m_doc["Height"].GetInt();
+
     for (unsigned int i = 0; i < m_doc["Sprites"].Size(); i++)
     {
         std::string SpriteName = m_doc["Sprites"][i]["Name"].GetString();
@@ -16,8 +19,6 @@ fw::Spritesheet::Spritesheet(char* fileloc)
         int OffsetY = m_doc["Sprites"][i]["Y"].GetInt();
         int ScaleX = m_doc["Sprites"][i]["W"].GetInt();
         int ScaleY = m_doc["Sprites"][i]["H"].GetInt();
-        int SpriteX = m_doc["Width"].GetInt();
-        int SpriteY = m_doc["Height"].GetInt();
 
         Sprite* temp = new Sprite(SpriteName, OffsetX, OffsetY, ScaleX, ScaleY);
 
