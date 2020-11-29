@@ -15,5 +15,5 @@ const Tilemap::TileType level1Layout[] =
 	TT::WallWest, TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::WallEast,
 	TT::WallWest, TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::WallEast,
 	TT::WallWest, TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::Floor,	TT::WallEast,
-	TT::WallSW,		TT::WallSouth,	 TT::WallSouth,		TT::WallSouth,	TT::WallSouth,	TT::WallSouth,	TT::WallSouth,	 TT::WallSouth,		TT::WallSouth,	 TT::WallSE,
+	TT::WallNorth,		TT::WallNorth,	 TT::WallNorth,		TT::WallNorth,	TT::WallNorth,	TT::WallNorth,	TT::WallNorth,	 TT::WallNorth,		TT::WallNorth,	 TT::WallNorth,
 };
