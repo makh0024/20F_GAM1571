@@ -1,5 +1,7 @@
 #pragma once
 
+class Player;
+
 struct TileProperties
 {
 	bool bIsWalkable;
@@ -33,8 +35,7 @@ public:
 		NumTypes
 	};
 
-	Tilemap(int width, int height, const TileType* pLayout);
-	void SetTilemap();
+	Tilemap(int width, int height, const TileType* pLayout, Player* player);
 	~Tilemap();
 
 	void SendPlayerPos(fw::vec2 playerPos);
@@ -63,4 +64,6 @@ private:
 	fw::vec2 m_UVOffset = fw::vec2(0, 0);
 
 	fw::vec2 m_PlayerPos;
+
+	Player* m_pPlayer;
 };

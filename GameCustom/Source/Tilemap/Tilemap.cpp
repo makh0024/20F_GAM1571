@@ -1,15 +1,18 @@
 #include "GamePCH.h"
-#include "Tilemap.h"
 #include "Layout.h"
 #include "../Characters/Shapes.h"
 #include "../Characters/Player.h"
 
+#include "Tilemap.h"
+
 using namespace fw;
 
-Tilemap::Tilemap(int width, int height, const TileType* pLayout)
+Tilemap::Tilemap(int width, int height, const TileType* pLayout, Player* player)
 {
 	m_MapSize.x = (float)width;
 	m_MapSize.y = (float)height;
+
+	m_pPlayer = player;
 
 	m_pLayout = new TileType[width * height];
 
@@ -18,12 +21,6 @@ Tilemap::Tilemap(int width, int height, const TileType* pLayout)
 		m_pLayout[i] = pLayout[i];
 	}
 
-	SetTilemap();
-
-}
-
-void Tilemap::SetTilemap()
-{
 	m_TilePos = fw::vec2(5.0f, 5.0f);
 	m_Color = fw::vec4::White(1.0f);
 
@@ -40,17 +37,16 @@ void Tilemap::SetTilemap()
 	//m_pTileProperties[(int)TileType::Wall] = TileProperties(m_pSpritesheet->GetSpriteInfo("Wall"), true);
 
 	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Floor"), true));
-	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall"), true));
-	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-S"), true));
-	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-N"), true));
-	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-W"), true));
-	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-E"), true));
-	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-NE"), true));
-	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-NW"), true));
-	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-SE"), true));
-	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-SW"), true));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall"),    false));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-S"),  false));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-N"),  false));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-W"),  false));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-E"),  false));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-NE"), false));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-NW"), false));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-SE"), false));
+	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-SW"), false));
 }
-
 
 Tilemap::~Tilemap()
 {
@@ -83,6 +79,20 @@ void Tilemap::Draw()
 			TileProperties properties = m_pTileProperties[(int)type];
 
 			m_pTileMesh->Draw(m_TilePos * m_TileSize, m_TileSize, m_PlayerPos, m_Color, m_pShader, m_pTexture, properties.m_UVScale, properties.m_UVOffset);
+
+			//if (properties.bIsWalkable == false)
+			//{
+			//	float rightTileWall = m_TilePos.x + (m_TileSize.x / 2);
+			//	float leftTileWall = m_TilePos.x - (m_TileSize.x / 2);
+			//	float topTileWall = m_TilePos.y + (m_TileSize.y / 2);
+			//	float bottomTileWall = m_TilePos.y - (m_TileSize.y / 2);
+
+			//	if ((m_pPlayer->GetPosition().x - 0.5f < rightTileWall || m_pPlayer->GetPosition().x + 0.5f > leftTileWall &&
+			//		 m_pPlayer->GetPosition().y - 0.5f < topTileWall   || m_pPlayer->GetPosition().y + 0.5f > bottomTileWall))
+			//	{
+			//		m_pPlayer->SetPosition(fw::vec2(7.5f, 7.5f)); //de boog
+			//	}
+			//}
 		}
 	}
 }

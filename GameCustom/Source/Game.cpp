@@ -139,7 +139,7 @@ void Game::Init()
     m_pSpritesheet = new fw::Spritesheet("Data/Textures/Bomberman.json");
 
     //Create GameObjects
-    m_pPlayer = new Player(5.0f, 5.0f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.75f, 1.5f));
+    m_pPlayer = new Player(7.5f, 7.5f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.75f, 1.5f));
     m_pPlayer->SetTexture(m_pTextures["Player"]);
 
     //m_pPlayer2 = new Player(0.5f, 0.5f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet);
@@ -151,5 +151,5 @@ void Game::Init()
     wglSwapInterval(m_VSyncEnabled ? 1 : 0);
 
     //Tilemap Settings
-    m_pTilemap = new Tilemap(10, 10, level1Layout);
+    m_pTilemap = new Tilemap(10, 10, level1Layout, m_pPlayer);
 }

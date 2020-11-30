@@ -1,12 +1,20 @@
 #include "GamePCH.h"
 #include "Shapes.h"
 
+//const fw::VertexFormat meshAttribs_Sprite[] =
+//{
+//    fw::VertexFormat(0.0f, 0.0f,    0, 0), // bl
+//    fw::VertexFormat(0.0f, 1.0f,    0, 1), // tl
+//    fw::VertexFormat(1.0f, 1.0f,    1, 1), // tr
+//    fw::VertexFormat(1.0f, 0.f ,    1, 0), // br
+//};
+
 const fw::VertexFormat meshAttribs_Sprite[] =
 {
-    fw::VertexFormat(0.0f, 0.0f,    0, 0), // bl
-    fw::VertexFormat(0.0f, 1.0f,    0, 1), // tl
-    fw::VertexFormat(1.0f, 1.0f,    1, 1), // tr
-    fw::VertexFormat(1.0f, 0.f ,    1, 0), // br
+    fw::VertexFormat(0.0f - 0.5f, 0.0f - 0.5f,    0, 0), // bl
+    fw::VertexFormat(0.0f - 0.5f, 1.0f - 0.5f,    0, 1), // tl
+    fw::VertexFormat(1.0f - 0.5f, 1.0f - 0.5f,    1, 1), // tr
+    fw::VertexFormat(1.0f - 0.5f, 0.f  - 0.5f,    1, 0), // br
 };
 
 const int meshPrimType_Sprite = GL_TRIANGLE_FAN;
