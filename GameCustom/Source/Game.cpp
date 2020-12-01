@@ -151,5 +151,5 @@ void Game::Init()
     wglSwapInterval(m_VSyncEnabled ? 1 : 0);
 
     //Tilemap Settings
-    m_pTilemap = new Tilemap(10, 10, level1Layout, m_pPlayer);
+    m_pTilemap = new Tilemap(10, 10, level1Layout, m_pMeshs["Player"], m_pShaders["Basic"], m_pTextures["Player"], m_pSpritesheet, m_pPlayer);
 }

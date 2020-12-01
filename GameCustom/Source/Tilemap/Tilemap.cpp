@@ -7,7 +7,7 @@
 
 using namespace fw;
 
-Tilemap::Tilemap(int width, int height, const TileType* pLayout, Player* player)
+Tilemap::Tilemap(int width, int height, const TileType* pLayout, fw::Mesh* mesh, fw::ShaderProgram* shader, fw::Texture* texture, fw::Spritesheet* spriteSheet, Player* player)
 {
 	m_MapSize.x = (float)width;
 	m_MapSize.y = (float)height;
@@ -24,17 +24,13 @@ Tilemap::Tilemap(int width, int height, const TileType* pLayout, Player* player)
 	m_TilePos = fw::vec2(5.0f, 5.0f);
 	m_Color = fw::vec4::White(1.0f);
 
-	m_pTileMesh = new fw::Mesh(meshPrimType_Sprite, meshNumVerts_Sprite, meshAttribs_Sprite);;
-	m_pShader = new fw::ShaderProgram("Data/Basic.vert", "Data/Basic.frag");
-	m_pTexture = new fw::Texture("Data/Textures/Bomberman.png");
+	m_pTileMesh = mesh;
+	m_pShader = shader;
+	m_pTexture = texture;
 
-	m_pSpritesheet = new fw::Spritesheet("Data/Textures/Bomberman.json");
+	m_pSpritesheet = spriteSheet;
 
 	m_pTileSprite = m_pSpritesheet->GetSpriteInfo("Floor");
-
-	//m_pTileProperties.resize((int)TileType::NumTypes);
-	//m_pTileProperties[(int)TileType::Floor] = TileProperties(m_pSpritesheet->GetSpriteInfo("Floor"), true);
-	//m_pTileProperties[(int)TileType::Wall] = TileProperties(m_pSpritesheet->GetSpriteInfo("Wall"), true);
 
 	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Floor"), true));
 	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall"),    false));
@@ -50,12 +46,6 @@ Tilemap::Tilemap(int width, int height, const TileType* pLayout, Player* player)
 
 Tilemap::~Tilemap()
 {
-	delete m_pTileMesh;
-	delete m_pShader;
-	delete m_pTexture;
-
-	delete m_pSpritesheet;
-
 	delete[] m_pLayout;
 }
 
@@ -87,8 +77,13 @@ void Tilemap::Draw()
 			//	float topTileWall = m_TilePos.y + (m_TileSize.y / 2);
 			//	float bottomTileWall = m_TilePos.y - (m_TileSize.y / 2);
 
-			//	if ((m_pPlayer->GetPosition().x - 0.5f < rightTileWall || m_pPlayer->GetPosition().x + 0.5f > leftTileWall &&
-			//		 m_pPlayer->GetPosition().y - 0.5f < topTileWall   || m_pPlayer->GetPosition().y + 0.5f > bottomTileWall))
+			//	float playerLeftWall = m_pPlayer->GetPosition().x - 0.5f;
+			//	float playerRightWall = m_pPlayer->GetPosition().x + 0.5f;
+			//	float playerTopWall = m_pPlayer->GetPosition().y + 0.5f;
+			//	float playerBottomWall = m_pPlayer->GetPosition().y - 0.5f;
+
+			//	if ((playerLeftWall < rightTileWall && playerRightWall > leftTileWall &&
+			//		 playerBottomWall < topTileWall    && playerTopWall > bottomTileWall))
 			//	{
 			//		m_pPlayer->SetPosition(fw::vec2(7.5f, 7.5f)); //de boog
 			//	}

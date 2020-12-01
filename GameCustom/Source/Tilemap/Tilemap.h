@@ -35,7 +35,7 @@ public:
 		NumTypes
 	};
 
-	Tilemap(int width, int height, const TileType* pLayout, Player* player);
+	Tilemap(int width, int height, const TileType* pLayout, fw::Mesh* mesh, fw::ShaderProgram* shader, fw::Texture* texture, fw::Spritesheet* spriteSheet, Player* player);
 	~Tilemap();
 
 	void SendPlayerPos(fw::vec2 playerPos);
