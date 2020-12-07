@@ -16,9 +16,20 @@ Tilemap::Tilemap(int width, int height, const TileType* pLayout, fw::Mesh* mesh,
 
 	m_pLayout = new TileType[width * height];
 
-	for (int i = 0; i < width * height; i++)
+	/*for (int i = 0; i < width * height; i++)
 	{
 		m_pLayout[i] = pLayout[i];
+	}*/
+
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			int index = y * width + x;
+			int flippedIndex = (height - y - 1) * width + x;
+
+			m_pLayout[flippedIndex] = pLayout[index];
+		}
 	}
 
 	m_TilePos = fw::vec2(5.0f, 5.0f);
@@ -42,6 +53,8 @@ Tilemap::Tilemap(int width, int height, const TileType* pLayout, fw::Mesh* mesh,
 	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-NW"), false));
 	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-SE"), false));
 	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-SW"), false));
+
+
 }
 
 Tilemap::~Tilemap()
@@ -54,13 +67,35 @@ void Tilemap::SendPlayerPos(fw::vec2 playerPos)
 	m_PlayerPos = playerPos;
 }
 
+fw::vec2 Tilemap::GetPosAtTile(int tileNum)
+{
+	return m_TilePos * m_TileSize;
+}
+
+fw::vec2 Tilemap::CurrentTileAt(fw::vec2 tilePos)
+{
+	fw::vec2 TtilePos = vec2(tilePos.x / m_TileSize.x, tilePos.y / m_TileSize.y);
+
+	return TtilePos;
+}
+
+bool Tilemap::IsTileWalkableAtTilePos(int x, int y)
+{
+	if (x < 0 || x >= (int)m_MapSize.x || y < 0 || y >= (int)m_MapSize.y)
+		return false;
+
+	//return m_pLayout[y * (int)m_MapSize.x + x] == TileType::Floor ? true : false;
+
+	return m_pTileProperties.at(int(m_pLayout[y * (int)m_MapSize.x + x])).bIsWalkable;
+}
+
 void Tilemap::Draw()
 {
 	for (int y = 0; y < m_MapSize.y; y++)
 	{
 		for (int x = 0; x < m_MapSize.x; x++)
 		{
-			m_TilePos = fw::vec2((float)x, (float)(m_MapSize.y -y -1));
+			m_TilePos = fw::vec2((float)x, (float)(y/*m_MapSize.y -y -1*/));
 
 			int TileIndex = y * (int)m_MapSize.x + x;
 

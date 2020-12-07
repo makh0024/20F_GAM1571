@@ -19,6 +19,8 @@ GameObject::GameObject(float x, float y, std::string Name, Mesh* Mesh, ShaderPro
 	m_objectType = objectType;
 
 	m_Scale = scale;
+
+	//m_CameraPos = cameraPos;
 }
 
 GameObject::~GameObject()
@@ -32,7 +34,12 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::Draw()
 {	
-	m_pMesh->Draw(m_Pos, m_Scale, m_Pos, m_Color, m_pShader, m_pTexture, m_UVScale, m_UVOffset);
+	m_pMesh->Draw(m_Pos, m_Scale, m_CameraPos, m_Color, m_pShader, m_pTexture, m_UVScale, m_UVOffset);
+}
+
+void fw::GameObject::ChangeCameraPos(vec2 cameraPos)
+{
+	m_CameraPos = cameraPos;
 }
 
 std::string fw::GameObject::GetName()

@@ -24,7 +24,7 @@ void main()
     pos -= u_CameraPos;
 
     // Divide to fit in clip space
-    pos /= vec2(7.5, 7.5);
+    pos /= vec2(5, 5);
     //pos /= vec2(3.0f, 3.0f);
 
     v_UVCoord = a_UVCoord * u_UVScale + u_UVOffset;

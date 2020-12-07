@@ -26,6 +26,8 @@ namespace fw {
 		virtual void Update(float deltaTime);
 		void Draw();
 
+		void ChangeCameraPos(vec2 cameraPos);
+
 		std::string GetName();
 
 		void SetTexture(Texture* pTexture) { m_pTexture = pTexture; }
@@ -41,6 +43,8 @@ namespace fw {
 		fw::vec2 m_Pos = fw::vec2(0.0f, 0.0f);
 		fw::vec2 m_Scale = fw::vec2(1.f, 1.f);
 		fw::vec4 m_Color = fw::vec4(0, 0, 0, 0);
+
+		fw::vec2 m_CameraPos = fw::vec2 (0.0f, 0.0f);
 
 		Mesh* m_pMesh = nullptr;
 		ShaderProgram* m_pShader = nullptr;

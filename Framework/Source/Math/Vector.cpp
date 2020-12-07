@@ -66,6 +66,17 @@ bool fw::vec2::operator<=(vec2 o)
 		return false;
 }
 
+bool fw::vec2::isInRange(vec2 o)
+{
+	float range = 0.01f;
+
+	if (x > o.x - range && x < o.x + range
+		&& y > o.y - range && y < o.y + range)
+		return true;
+
+	return false;
+}
+
 float fw::vec2::Magnitude()
 {
 	return sqrtf((x*x) + (y*y)) ;
@@ -73,7 +84,7 @@ float fw::vec2::Magnitude()
 
 float fw::vec2::Distance(vec2 o)
 {
-	return sqrt((y*y - o.y*o.y) + (x*x - o.x*o.x));
+	return (*this - o).Magnitude();
 }
 
 void fw::vec2::Normalize()

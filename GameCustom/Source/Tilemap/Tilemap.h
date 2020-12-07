@@ -40,7 +40,15 @@ public:
 
 	void SendPlayerPos(fw::vec2 playerPos);
 
+	fw::vec2 GetPosAtTile(int tileNum);
+
+	fw::vec2 CurrentTileAt(fw::vec2 tilePos);
+
+	bool IsTileWalkableAtTilePos(int x, int y);
+
 	void Draw();
+	
+	fw::vec2 m_MapSize;
 protected:
 	std::vector<TileProperties> m_pTileProperties;
 	TileType* m_pLayout;
@@ -56,9 +64,8 @@ private:
 	fw::ShaderProgram* m_pShader = nullptr;
 	fw::Texture* m_pTexture = nullptr;
 	
-	fw::vec2 m_MapSize;
 	
-	fw::vec2 m_TileSize = fw::vec2(1.5f, 1.5f);
+	fw::vec2 m_TileSize = fw::vec2(1.0f, 1.0f);
 
 	fw::vec2 m_UVScale = fw::vec2(1, 1);
 	fw::vec2 m_UVOffset = fw::vec2(0, 0);

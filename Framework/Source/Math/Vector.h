@@ -42,6 +42,8 @@ namespace fw
 		bool operator>=(vec2 o);
 		bool operator<=(vec2 o);
 
+		bool isInRange(vec2 o);
+
 		float Magnitude();
 		float Distance(vec2 o);
 		void Normalize();

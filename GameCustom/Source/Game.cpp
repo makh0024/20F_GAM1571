@@ -9,6 +9,9 @@
 #include "Characters/Shapes.h"
 #include "Tilemap/Tilemap.h"
 #include "Tilemap/Layout.h"
+#include "Pathfinder/Pathfinder.h"
+#include "Characters/Enemy.h"
+
 #include "Game.h"
 
 Game::Game(fw::FWCore* pFramework) : fw::GameCore(pFramework)
@@ -27,6 +30,8 @@ Game::~Game()
     delete m_pSpritesheet;
 
     delete m_pTilemap;
+
+    delete m_pPathfinder;
 
     for (fw::GameObject* pObject : m_gameObjects)
     {
@@ -60,10 +65,15 @@ void Game::Update(float deltaTime)
     ImGui::ShowDemoWindow();
 
     m_pTilemap->SendPlayerPos(m_pPlayer->GetPosition());
+    //m_pEnemy->ChangeCameraPos(m_pPlayer->GetPosition());
+   // m_pPlayer->ChangeCameraPos(m_pPlayer->GetPosition());
+
 
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
         m_gameObjects.at(i)->Update(deltaTime);
+
+        m_gameObjects.at(i)->ChangeCameraPos(m_pPlayer->GetPosition());
 
         ImGui::PushID(m_gameObjects.at(i));
         
@@ -74,6 +84,7 @@ void Game::Update(float deltaTime)
     {
         wglSwapInterval(m_VSyncEnabled ? 1 : 0);
     }
+
 }
 
 void Game::Draw()
@@ -139,7 +150,7 @@ void Game::Init()
     m_pSpritesheet = new fw::Spritesheet("Data/Textures/Bomberman.json");
 
     //Create GameObjects
-    m_pPlayer = new Player(7.5f, 7.5f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.75f, 1.5f));
+    m_pPlayer = new Player(5.f, 5.f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f));
     m_pPlayer->SetTexture(m_pTextures["Player"]);
 
     //m_pPlayer2 = new Player(0.5f, 0.5f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet);
@@ -152,4 +163,10 @@ void Game::Init()
 
     //Tilemap Settings
     m_pTilemap = new Tilemap(10, 10, level1Layout, m_pMeshs["Player"], m_pShaders["Basic"], m_pTextures["Player"], m_pSpritesheet, m_pPlayer);
+
+    m_pPathfinder = new Pathfinder(m_pTilemap, 10, 10);
+
+    m_pEnemy = new Enemy(2.f, 2.f, "Circle", m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f), m_pPathfinder, m_pTilemap);
+
+    m_gameObjects.push_back(m_pEnemy);
 }
