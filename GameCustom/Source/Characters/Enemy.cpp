@@ -39,137 +39,10 @@ Enemy::~Enemy()
 
 void Enemy::Update(float deltaTime)
 {
-	//ImGui::Text("pos: %f, %f", m_Pos.x, m_Pos.y);
-
-	/*AnimDelay += deltaTime;
-
-	if (AnimDelay > 0.5)
-	{
-		AnimDelay = 0.0f;
-	}
-
-	if (m_pPlayerController->IsHeld(PlayerController::Mask::Up))
-	{
-		m_Pos.y += 2.0f * deltaTime;
-
-		int noOfFrames = 3;
-
-		for (int i = 0; i < noOfFrames; i++)
-		{
-			if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay > (0.5 / (float)noOfFrames) * i)
-			{
-				DefaultSprite =  m_pSpritesheet->GetSpriteInfo("BM_WalkUp" + std::to_string(i + 1));
-			}
-		}
-	}
-
-	else if (m_pPlayerController->IsHeld(PlayerController::Mask::Left))
-	{
-		m_Pos.x -= 2.0f * deltaTime;
-
-		int noOfFrames = 3;
-
-		for (int i = 0; i < noOfFrames; i++)
-		{
-			if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay >(0.5 / (float)noOfFrames) * i)
-			{
-				DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkLeft" + std::to_string(i + 1));
-			}
-		}
-	}
-
-	else if (m_pPlayerController->IsHeld(PlayerController::Mask::Down))
-	{
-		m_Pos.y -= 2.0f * deltaTime;
-
-		int noOfFrames = 3;
-
-		for (int i = 0; i < noOfFrames; i++)
-		{
-			if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay >(0.5 / (float)noOfFrames) * i)
-			{
-				DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkDown" + std::to_string(i + 1));
-			}
-		}
-	}
-
-	else if (m_pPlayerController->IsHeld(PlayerController::Mask::Right))
-	{
-		m_Pos.x += 2.0f * deltaTime;
-
-		int noOfFrames = 3;
-
-		for (int i = 0; i < noOfFrames; i++)
-		{
-			if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay >(0.5 / (float)noOfFrames) * i)
-			{
-				DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkRight" + std::to_string(i + 1));
-			}
-		}
-	}
-
-	if (m_pPlayerController->IsHeld(PlayerController::Mask::Up) == false &&
-		m_pPlayerController->IsHeld(PlayerController::Mask::Down) == false &&
-		m_pPlayerController->IsHeld(PlayerController::Mask::Left) == false &&
-		m_pPlayerController->IsHeld(PlayerController::Mask::Right) == false)
-	{
-		DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkDown1");
-	}
-
-	m_UVOffset = vec2(DefaultSprite->m_OffsetX / (float)m_pSpritesheet->m_Width, DefaultSprite->m_OffsetY / (float)m_pSpritesheet->m_Height);
-	m_UVScale = vec2(DefaultSprite->m_ScaleX / (float)m_pSpritesheet->m_Width, DefaultSprite->m_ScaleY / (float)m_pSpritesheet->m_Height);*/
-
 	ImGui::DragFloat2("enemyPosition", &m_Pos.x, 0.1f);
 
 	m_UVOffset = vec2(DefaultSprite->m_OffsetX / (float)m_pSpritesheet->m_Width, DefaultSprite->m_OffsetY / (float)m_pSpritesheet->m_Height);
 	m_UVScale = vec2(DefaultSprite->m_ScaleX / (float)m_pSpritesheet->m_Width, DefaultSprite->m_ScaleY / (float)m_pSpritesheet->m_Height);
-
-	//int path[255];
-
-	//if (m_pPathfinder->FindPath((int)m_Pos.x, (int)m_Pos.y, 2, 2) == true)
-	//{
-	//	int length = m_pPathfinder->GetPath(path, 255, 2, 2);
-	//	int bp = 1;
-
-	//	for (int i = 0; i < length; i++)
-	//	{
-	//		ImGui::Text("%d\n", path[i]);
-	//		
-	//		//m_Pos.x = path[i];
-	//	}
-
-
-	//	//m_Pos = fw::vec2(2, 2);
-	//
-
-
-	//FindPath();
-
-	/*waittime += deltaTime;
-
-	if (waittime > 0.5f)
-	{
-		FindPath();
-		waittime = 0.f;
-	}*/
-
-	//FindPath();
-
-	//if (timerstart == true && hasreachednexttile == false)
-	//{
-	//	timer += deltaTime;
-	//	//FindPath();
-
-	//	m_Pos = (initialpos + (direction * timer * 1.f));
-	//}
-
-	//if (m_Pos.isInRange(finalpos) == true)
-	//{
-	//	hasreachednexttile = true;
-	//	timerstart = false;
-
-	//	FindPath();
-	//}
 
 	AnimDelay += deltaTime;
 
@@ -286,8 +159,8 @@ void Enemy::Update(float deltaTime)
 
 void Enemy::FindPath()
 {
-	int startx = m_pTilemap->CurrentTileAt(fw::vec2(m_Pos.x, m_Pos.y)).x;
-	int starty = m_pTilemap->CurrentTileAt(fw::vec2(m_Pos.x, m_Pos.y)).y;
+	int startx = (int)m_pTilemap->CurrentTileAt(fw::vec2(m_Pos.x, m_Pos.y)).x;
+	int starty = (int)m_pTilemap->CurrentTileAt(fw::vec2(m_Pos.x, m_Pos.y)).y;
 
 	if (hasreached == true)
 	{
@@ -304,29 +177,13 @@ void Enemy::FindPath()
 	int len = m_pPathfinder->GetPath(path, 255, m_endx, m_endy);
 
 	if (len > 1)
-	{		
-		/*if (hasreachednexttile == true)
-		{*/
+	{
 			int nexttilex = path[len - 2] % ((int)m_pTilemap->m_MapSize.x);
 			int nexttiley = path[len - 2] / ((int)m_pTilemap->m_MapSize.y);
 
 			if (m_pTilemap->IsTileWalkableAtTilePos(nexttilex, nexttiley) == true)
 			{
-				//fw::vec2 targetPosition = fw::vec2(nexttilex, nexttiley);
-
-				/*finalpos = fw::vec2(nexttilex, nexttiley);
-
-				initialpos = m_Pos;
-
-				direction = (finalpos - initialpos).Normalized();
-
-				timerstart = true;
-
-				hasreachednexttile = false;
-
-				timer = 0.f;*/
-
-				fw::vec2 position = fw::vec2(nexttilex, nexttiley);
+				fw::vec2 position = fw::vec2((float)nexttilex, (float)nexttiley);
 				float distance = position.Distance(m_Pos);
 
 				//Calculate the duration of the animation
@@ -338,20 +195,10 @@ void Enemy::FindPath()
 
 				//Keep track of the initial position
 				m_StartingPosition = m_Pos;
-
-				//m_Pos = targetPosition;
-
-				//m_Pos += fw::vec2((targetPosition - m_Pos) * 0.1f);
-
-				//m_Pos = initialpos + (finalpos - initialpos) * 0.1f;
 			}
-		
-		/*}*/		
 	}
 	else
 	{
-		//hasreachednexttile = true;
-
 		m_Displacement = fw::vec2(0.f, 0.f);		
 
 		runbreaktime = true;
