@@ -34,4 +34,8 @@ private:
 	Tilemap* m_pTilemap;
 
 	bool CanMove(float deltaTime);
+
+	bool m_isAlive = true;
+
+	//bool m_hasExploded = false;
 };

@@ -34,98 +34,133 @@ void Player::Update(float deltaTime)
 {
 	//ImGui::Text("pos: %f, %f", m_Pos.x, m_Pos.y);
 
-	AnimDelay += deltaTime;
-
-	if (AnimDelay > 0.5)
+	if (m_isAlive == true)
 	{
-		AnimDelay = 0.0f;
-	}
+		AnimDelay += deltaTime;
 
-	if (m_pPlayerController->IsHeld(PlayerController::Mask::Up))
-	{
-		m_dir.y = 2.0f;
-		m_dir.x = 0.f;
-		int noOfFrames = 3;
-
-		for (int i = 0; i < noOfFrames; i++)
+		if (AnimDelay > 0.5)
 		{
-			if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay > (0.5 / (float)noOfFrames) * i)
+			AnimDelay = 0.0f;
+		}
+
+		if (m_pPlayerController->IsHeld(PlayerController::Mask::Up))
+		{
+			m_dir.y = 2.0f;
+			m_dir.x = 0.f;
+			int noOfFrames = 3;
+
+			for (int i = 0; i < noOfFrames; i++)
 			{
-				DefaultSprite =  m_pSpritesheet->GetSpriteInfo("BM_WalkUp" + std::to_string(i + 1));
+				if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay >(0.5 / (float)noOfFrames) * i)
+				{
+					DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkUp" + std::to_string(i + 1));
+				}
+			}
+		}
+
+		else if (m_pPlayerController->IsHeld(PlayerController::Mask::Left))
+		{
+			m_dir.x = -2.0f;
+			m_dir.y = 0.f;
+			int noOfFrames = 3;
+
+			for (int i = 0; i < noOfFrames; i++)
+			{
+				if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay >(0.5 / (float)noOfFrames) * i)
+				{
+					DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkLeft" + std::to_string(i + 1));
+				}
+			}
+		}
+
+		else if (m_pPlayerController->IsHeld(PlayerController::Mask::Down))
+		{
+			m_dir.y = -2.0f;
+			m_dir.x = 0.f;
+			int noOfFrames = 3;
+
+			for (int i = 0; i < noOfFrames; i++)
+			{
+				if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay >(0.5 / (float)noOfFrames) * i)
+				{
+					DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkDown" + std::to_string(i + 1));
+				}
+			}
+		}
+
+		else if (m_pPlayerController->IsHeld(PlayerController::Mask::Right))
+		{
+			m_dir.x = 2.0f;
+			m_dir.y = 0.f;
+			int noOfFrames = 3;
+
+			for (int i = 0; i < noOfFrames; i++)
+			{
+				if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay >(0.5 / (float)noOfFrames) * i)
+				{
+					DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkRight" + std::to_string(i + 1));
+				}
+			}
+		}
+
+		if (m_pPlayerController->IsHeld(PlayerController::Mask::Up) == false &&
+			m_pPlayerController->IsHeld(PlayerController::Mask::Down) == false &&
+			m_pPlayerController->IsHeld(PlayerController::Mask::Left) == false &&
+			m_pPlayerController->IsHeld(PlayerController::Mask::Right) == false)
+		{
+			m_dir.x = 0;
+			m_dir.y = 0;
+			DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkDown1");
+		}
+
+		m_UVOffset = vec2(DefaultSprite->m_OffsetX / (float)m_pSpritesheet->m_Width, DefaultSprite->m_OffsetY / (float)m_pSpritesheet->m_Height);
+		m_UVScale = vec2(DefaultSprite->m_ScaleX / (float)m_pSpritesheet->m_Width, DefaultSprite->m_ScaleY / (float)m_pSpritesheet->m_Height);
+
+		if (CanMove(deltaTime) == true)
+			m_Pos += m_dir * deltaTime;
+
+		ImGui::DragFloat2("Position", &m_Pos.x, 0.1f);
+
+		if (m_pPlayerController->IsHeld(PlayerController::Mask::Throw) == true)
+		{
+			if (m_pBomb->m_isActive == false)
+			{
+				m_pBomb->SetPosition(fw::vec2((int)(m_Pos.x + 0.5f), (int)m_Pos.y));
+				m_pBomb->SetIsActive(true);
+			}
+		}
+
+		if (m_pBomb->timer > 1.9f)
+		{
+			int explodedtile[8];
+
+			for (int i = 0; i < 2; i++)
+			{
+				//vertical
+				explodedtile[i] = (int)(m_pBomb->GetPosition().y * m_pTilemap->m_MapSize.x + m_pBomb->GetPosition().x) + 10 * i;
+				explodedtile[i + 2] = (int)(m_pBomb->GetPosition().y * m_pTilemap->m_MapSize.x + m_pBomb->GetPosition().x) + 10 * -i;
+
+				//horizontal
+				explodedtile[i + 4] = (int)(m_pBomb->GetPosition().y * m_pTilemap->m_MapSize.x + m_pBomb->GetPosition().x) + 1 * i;
+				explodedtile[i + 6] = (int)(m_pBomb->GetPosition().y * m_pTilemap->m_MapSize.x + m_pBomb->GetPosition().x) + 1 * -i;
+			}
+
+			int playertile = (int)(m_Pos.y * m_pTilemap->m_MapSize.x + m_Pos.x);
+
+			for (int i = 0; i < 8; i++)
+			{
+				if (playertile == explodedtile[i])
+				{
+					SetCanDraw(false);
+					
+					m_isAlive = false;
+				}
 			}
 		}
 	}
-
-	else if (m_pPlayerController->IsHeld(PlayerController::Mask::Left))
+	else
 	{
-		m_dir.x = -2.0f;
-		m_dir.y = 0.f;
-		int noOfFrames = 3;
-
-		for (int i = 0; i < noOfFrames; i++)
-		{
-			if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay >(0.5 / (float)noOfFrames) * i)
-			{
-				DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkLeft" + std::to_string(i + 1));
-			}
-		}
-	}
-
-	else if (m_pPlayerController->IsHeld(PlayerController::Mask::Down))
-	{
-		m_dir.y = -2.0f;
-		m_dir.x = 0.f;
-		int noOfFrames = 3;
-
-		for (int i = 0; i < noOfFrames; i++)
-		{
-			if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay >(0.5 / (float)noOfFrames) * i)
-			{
-				DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkDown" + std::to_string(i + 1));
-			}
-		}
-	}
-
-	else if (m_pPlayerController->IsHeld(PlayerController::Mask::Right))
-	{
-		m_dir.x = 2.0f;
-		m_dir.y = 0.f;
-		int noOfFrames = 3;
-
-		for (int i = 0; i < noOfFrames; i++)
-		{
-			if (AnimDelay < (0.5 / (float)noOfFrames) * i + 1 && AnimDelay >(0.5 / (float)noOfFrames) * i)
-			{
-				DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkRight" + std::to_string(i + 1));
-			}
-		}
-	}
-
-	if (m_pPlayerController->IsHeld(PlayerController::Mask::Up) == false &&
-		m_pPlayerController->IsHeld(PlayerController::Mask::Down) == false &&
-		m_pPlayerController->IsHeld(PlayerController::Mask::Left) == false &&
-		m_pPlayerController->IsHeld(PlayerController::Mask::Right) == false)
-	{
-		m_dir.x = 0;
-		m_dir.y = 0;
-		DefaultSprite = m_pSpritesheet->GetSpriteInfo("BM_WalkDown1");
-	}
-
-	m_UVOffset = vec2(DefaultSprite->m_OffsetX / (float)m_pSpritesheet->m_Width, DefaultSprite->m_OffsetY / (float)m_pSpritesheet->m_Height);
-	m_UVScale = vec2(DefaultSprite->m_ScaleX / (float)m_pSpritesheet->m_Width, DefaultSprite->m_ScaleY / (float)m_pSpritesheet->m_Height);
-
-	if (CanMove(deltaTime) == true)
-		m_Pos += m_dir * deltaTime;
-
-	ImGui::DragFloat2("Position", &m_Pos.x, 0.1f);
-
-	if (m_pPlayerController->IsHeld(PlayerController::Mask::Throw) == true)
-	{
-		if (m_pBomb->m_isActive == false)
-		{
-			m_pBomb->SetPosition(fw::vec2((int)(m_Pos.x + 0.5f), (int)m_Pos.y));
-			m_pBomb->SetIsActive(true);
-		}
+		m_Pos = fw::vec2(5.f, 5.f); //camera to middle of screen
 	}
 }
 

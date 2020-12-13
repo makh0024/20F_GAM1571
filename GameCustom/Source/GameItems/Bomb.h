@@ -13,6 +13,7 @@ public:
 
 	void SetIsActive(bool active);
 	bool m_isActive;
+	float timer;
 protected:
 
 private:	
@@ -21,6 +22,5 @@ private:
 	fw::vec2 m_UVOffset = fw::vec2(0, 0);
 	Tilemap* m_pTilemap;
 
-	float timer;
 
 };

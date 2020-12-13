@@ -28,7 +28,7 @@ void Bomb::Update(float deltaTime)
 
 		SetCanDraw(true);
 
-		if (timer > 3)
+		if (timer > 2)
 		{
 			Explode();
 
@@ -45,34 +45,28 @@ void Bomb::Explode()
 {
 	int bombtile = (int)(m_Pos.y * m_pTilemap->m_MapSize.x + m_Pos.x);
 	//bombtile--;
-
-	//vertical
-	if (bombtile + 10 < 100)
-		m_pTilemap->m_pLayout[bombtile + 10] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile + 10] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile + 10] = m_pTilemap->m_pLayout[bombtile + 10];
-	
-	if (bombtile + 20 < 100)
-		m_pTilemap->m_pLayout[bombtile + 20] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile + 20] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile + 20] = m_pTilemap->m_pLayout[bombtile + 20];
-	
-	if (bombtile - 10 > 0)
-		m_pTilemap->m_pLayout[bombtile - 10] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile - 10] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile - 10] = m_pTilemap->m_pLayout[bombtile - 10];
-	
-	if (bombtile - 20 > 0)
-		m_pTilemap->m_pLayout[bombtile - 20] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile - 20] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile - 20] = m_pTilemap->m_pLayout[bombtile - 20];
-
 	SetCanDraw(false);
 
+	//vertical
+	for (int i = 10; i < 21; i += 10)
+	{
+		if (bombtile + i < 100)
+			m_pTilemap->m_pLayout[bombtile + i] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile + i] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile + i] = m_pTilemap->m_pLayout[bombtile + i];
+		
+		if (bombtile - 10 > 0)
+			m_pTilemap->m_pLayout[bombtile - i] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile - i] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile - i] = m_pTilemap->m_pLayout[bombtile - i];
+	}
+	
 	//horizontal
-	if (bombtile + 1 < 100)
-		m_pTilemap->m_pLayout[bombtile + 1] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile + 1] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile + 1] = m_pTilemap->m_pLayout[bombtile + 1];
-
-	if (bombtile + 2 < 100)
-		m_pTilemap->m_pLayout[bombtile + 2] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile + 2] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile + 2] = m_pTilemap->m_pLayout[bombtile + 2];
-
-	if (bombtile - 1 > 0)
-		m_pTilemap->m_pLayout[bombtile - 1] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile - 1] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile - 1] = m_pTilemap->m_pLayout[bombtile - 1];
-
-	if (bombtile - 2 > 0)
-		m_pTilemap->m_pLayout[bombtile - 2] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile - 2] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile - 2] = m_pTilemap->m_pLayout[bombtile - 2];
+	for (int i = 1; i < 3; i++)
+	{
+		if (bombtile + i < 100)
+			m_pTilemap->m_pLayout[bombtile + i] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile + i] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile + i] = m_pTilemap->m_pLayout[bombtile + i];
+		
+		if (bombtile - i > 0)
+			m_pTilemap->m_pLayout[bombtile - i] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile - i] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile - i] = m_pTilemap->m_pLayout[bombtile - i];
+	}
+	
 
 }
 

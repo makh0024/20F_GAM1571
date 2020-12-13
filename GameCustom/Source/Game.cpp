@@ -170,7 +170,7 @@ void Game::Init()
 
     m_gameObjects.push_back(m_pBomb);
 
-    m_pPlayer = new Player(5.f, 5.f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f), m_pTilemap);
+    m_pPlayer = new Player(8.f, 8.f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f), m_pTilemap);
     m_pPlayer->SetTexture(m_pTextures["Player"]);
     m_pPlayer->SetBomb(m_pBomb);
 
@@ -178,7 +178,7 @@ void Game::Init()
     
     m_pPathfinder = new Pathfinder(m_pTilemap, 10, 10);
 
-    m_pEnemy = new Enemy(2.f, 2.f, "Circle", m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f), m_pPathfinder, m_pTilemap);
+    m_pEnemy = new Enemy(1.f, 1.f, "Circle", m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f), m_pPathfinder, m_pTilemap);
     m_pEnemy->SetTexture(m_pTextures["Player"]);
 
     m_gameObjects.push_back(m_pEnemy);
