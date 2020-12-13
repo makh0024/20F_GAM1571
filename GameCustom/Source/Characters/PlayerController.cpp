@@ -28,6 +28,7 @@ void PlayerController::OnEvent(fw::Event* pEvent)
 			if (pInputEvent->GetKeyCode() == 'S') { m_Flags = m_Flags | Mask::Down; }
 			if (pInputEvent->GetKeyCode() == 'D') { m_Flags = m_Flags | Mask::Right; }
 			if (pInputEvent->GetKeyCode() == 'R') { m_Flags = m_Flags | Mask::Restart; }
+			if (pInputEvent->GetKeyCode() == 'E') { m_Flags = m_Flags | Mask::Throw; }
 		}
 
 		if (pInputEvent->GetDeviceType() == fw::InputEvent::DeviceType::Keyboard
@@ -38,6 +39,7 @@ void PlayerController::OnEvent(fw::Event* pEvent)
 			if (pInputEvent->GetKeyCode() == 'S') { m_Flags &= ~Mask::Down; }
 			if (pInputEvent->GetKeyCode() == 'D') { m_Flags &= ~Mask::Right; }
 			if (pInputEvent->GetKeyCode() == 'R') { m_Flags &= ~Mask::Restart; }
+			if (pInputEvent->GetKeyCode() == 'E') { m_Flags &= ~Mask::Throw; }
 		}
 
 		/*fw::FWCore* m_pFramework = gamecore->GetFramework();

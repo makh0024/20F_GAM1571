@@ -14,8 +14,7 @@ namespace fw {
 			Default,
 			Player,
 			Enemy,
-			HealthPickup,
-			SmolBody,
+			Bomb,
 		};
 
 		Type GetType() { return m_objectType; }
@@ -39,6 +38,8 @@ namespace fw {
 
 		void SetColor(vec4 color);
 
+		void SetCanDraw(bool canDraw) { m_CanDraw = canDraw; }
+
 	protected:
 		fw::vec2 m_Pos = fw::vec2(0.0f, 0.0f);
 		fw::vec2 m_Scale = fw::vec2(1.f, 1.f);
@@ -59,5 +60,7 @@ namespace fw {
 
 		vec2 m_UVScale = vec2(1, 1);
 		vec2 m_UVOffset = vec2(0, 0);
+
+		bool m_CanDraw = true;
 	};
 }

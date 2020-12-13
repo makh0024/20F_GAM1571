@@ -7,12 +7,11 @@
 
 using namespace fw;
 
-Tilemap::Tilemap(int width, int height, const TileType* pLayout, fw::Mesh* mesh, fw::ShaderProgram* shader, fw::Texture* texture, fw::Spritesheet* spriteSheet, Player* player)
+Tilemap::Tilemap(int width, int height, TileType* pLayout, fw::Mesh* mesh, fw::ShaderProgram* shader, fw::Texture* texture, fw::Spritesheet* spriteSheet)
 {
 	m_MapSize.x = (float)width;
 	m_MapSize.y = (float)height;
 
-	m_pPlayer = player;
 
 	m_pLayout = new TileType[width * height];
 
@@ -53,7 +52,6 @@ Tilemap::Tilemap(int width, int height, const TileType* pLayout, fw::Mesh* mesh,
 	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-NW"), false));
 	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-SE"), false));
 	m_pTileProperties.push_back(TileProperties(m_pSpritesheet->GetSpriteInfo("Wall-SW"), false));
-
 
 }
 
@@ -105,24 +103,28 @@ void Tilemap::Draw()
 
 			m_pTileMesh->Draw(m_TilePos * m_TileSize, m_TileSize, m_PlayerPos, m_Color, m_pShader, m_pTexture, properties.m_UVScale, properties.m_UVOffset);
 
-			//if (properties.bIsWalkable == false)
-			//{
-			//	float rightTileWall = m_TilePos.x + (m_TileSize.x / 2);
-			//	float leftTileWall = m_TilePos.x - (m_TileSize.x / 2);
-			//	float topTileWall = m_TilePos.y + (m_TileSize.y / 2);
-			//	float bottomTileWall = m_TilePos.y - (m_TileSize.y / 2);
+			/*if (properties.bIsWalkable == false)
+			{
+				float rightTileWall = m_TilePos.x * m_TileSize.x + (m_TileSize.x / 2);
+				float leftTileWall = m_TilePos.x * m_TileSize.x - (m_TileSize.x / 2);
+				float topTileWall = m_TilePos.y * m_TileSize.y + (m_TileSize.y / 2);
+				float bottomTileWall = m_TilePos.y * m_TileSize.y - (m_TileSize.y / 2);
 
-			//	float playerLeftWall = m_pPlayer->GetPosition().x - 0.5f;
-			//	float playerRightWall = m_pPlayer->GetPosition().x + 0.5f;
-			//	float playerTopWall = m_pPlayer->GetPosition().y + 0.5f;
-			//	float playerBottomWall = m_pPlayer->GetPosition().y - 0.5f;
+				float playerLeftWall = m_pPlayer->GetPosition().x - 0.2f;
+				float playerRightWall = m_pPlayer->GetPosition().x + 0.2f;
+				float playerTopWall = m_pPlayer->GetPosition().y + 0.2f;
+				float playerBottomWall = m_pPlayer->GetPosition().y - 0.2f;
 
-			//	if ((playerLeftWall < rightTileWall && playerRightWall > leftTileWall &&
-			//		 playerBottomWall < topTileWall    && playerTopWall > bottomTileWall))
-			//	{
-			//		m_pPlayer->SetPosition(fw::vec2(7.5f, 7.5f)); //de boog
-			//	}
-			//}
+				if ((playerLeftWall < rightTileWall && playerRightWall > leftTileWall &&
+					 playerBottomWall < topTileWall  && playerTopWall > bottomTileWall))
+				{
+					fw::vec2 playerpos = m_pPlayer->GetPosition();
+					fw::vec2 tilepos = m_TilePos * m_TileSize;
+					fw::vec2 newpos = (playerpos - tilepos).Normalized();
+
+					m_pPlayer->SetPosition(newpos * ((m_TileSize.x / 2) + 0.2f) + tilepos);
+				}
+			}*/
 		}
 	}
 }

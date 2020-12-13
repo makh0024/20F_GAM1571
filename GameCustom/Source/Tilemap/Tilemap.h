@@ -35,7 +35,7 @@ public:
 		NumTypes
 	};
 
-	Tilemap(int width, int height, const TileType* pLayout, fw::Mesh* mesh, fw::ShaderProgram* shader, fw::Texture* texture, fw::Spritesheet* spriteSheet, Player* player);
+	Tilemap(int width, int height, TileType* pLayout, fw::Mesh* mesh, fw::ShaderProgram* shader, fw::Texture* texture, fw::Spritesheet* spriteSheet);
 	~Tilemap();
 
 	void SendPlayerPos(fw::vec2 playerPos);
@@ -49,9 +49,9 @@ public:
 	void Draw();
 	
 	fw::vec2 m_MapSize;
+	TileType* m_pLayout;
 protected:
 	std::vector<TileProperties> m_pTileProperties;
-	TileType* m_pLayout;
 
 	fw::Spritesheet* m_pSpritesheet = nullptr;
 	fw::Sprite* m_pTileSprite;
@@ -71,6 +71,4 @@ private:
 	fw::vec2 m_UVOffset = fw::vec2(0, 0);
 
 	fw::vec2 m_PlayerPos;
-
-	Player* m_pPlayer;
 };

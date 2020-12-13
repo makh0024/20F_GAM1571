@@ -5,6 +5,7 @@ class PlayerController;
 class Tilemap;
 class Pathfinder;
 class Enemy;
+class Bomb;
 
 class Game : public fw::GameCore
 {
@@ -47,6 +48,8 @@ protected:
     Pathfinder* m_pPathfinder;
 
     Enemy* m_pEnemy;
+
+    Bomb* m_pBomb;
     //Settings
     bool m_VSyncEnabled = true;
 };

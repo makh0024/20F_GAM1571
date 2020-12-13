@@ -1,3 +1,7 @@
 #pragma once
 #include "Tilemap.h"
-extern const Tilemap::TileType level1Layout[];
+//#include "DestructibleTilemap.h"
+
+extern Tilemap::TileType level1Layout[];
+
+//extern DestructibleTilemap::TileType destructibleLayout[];

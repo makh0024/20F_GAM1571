@@ -34,7 +34,8 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::Draw()
 {	
-	m_pMesh->Draw(m_Pos, m_Scale, m_CameraPos, m_Color, m_pShader, m_pTexture, m_UVScale, m_UVOffset);
+	if (m_CanDraw == true)
+		m_pMesh->Draw(m_Pos, m_Scale, m_CameraPos, m_Color, m_pShader, m_pTexture, m_UVScale, m_UVOffset);
 }
 
 void fw::GameObject::ChangeCameraPos(vec2 cameraPos)

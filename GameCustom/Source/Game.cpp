@@ -8,9 +8,11 @@
 #include "Characters/Player.h"
 #include "Characters/Shapes.h"
 #include "Tilemap/Tilemap.h"
+//#include "Tilemap/DestructibleTilemap.h"
 #include "Tilemap/Layout.h"
 #include "Pathfinder/Pathfinder.h"
 #include "Characters/Enemy.h"
+#include "GameItems/Bomb.h"
 
 #include "Game.h"
 
@@ -143,6 +145,7 @@ void Game::Init()
 
     //Load Textures
     m_pTextures["Player"] = new fw::Texture("Data/Textures/Bomberman.png");
+    m_pTextures["Bomb"] = new fw::Texture("Data/Textures/Bomb.png");
 
     //Load Meshs
     m_pMeshs["Player"] = new fw::Mesh(meshPrimType_Sprite, meshNumVerts_Sprite, meshAttribs_Sprite);
@@ -150,23 +153,33 @@ void Game::Init()
     m_pSpritesheet = new fw::Spritesheet("Data/Textures/Bomberman.json");
 
     //Create GameObjects
-    m_pPlayer = new Player(5.f, 5.f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f));
-    m_pPlayer->SetTexture(m_pTextures["Player"]);
 
     //m_pPlayer2 = new Player(0.5f, 0.5f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet);
 
-    m_gameObjects.push_back(m_pPlayer);
     //m_gameObjects.push_back(m_pPlayer2);
 
     //Settings
     wglSwapInterval(m_VSyncEnabled ? 1 : 0);
 
     //Tilemap Settings
-    m_pTilemap = new Tilemap(10, 10, level1Layout, m_pMeshs["Player"], m_pShaders["Basic"], m_pTextures["Player"], m_pSpritesheet, m_pPlayer);
+    m_pTilemap = new Tilemap(10, 10, level1Layout, m_pMeshs["Player"], m_pShaders["Basic"], m_pTextures["Player"], m_pSpritesheet);
 
+
+    m_pBomb = new Bomb(6.f, 8.f, "Bomb", m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.f), this, fw::vec2(0.5f, 0.5f), m_pTilemap);
+    m_pBomb->SetTexture(m_pTextures["Bomb"]);
+
+    m_gameObjects.push_back(m_pBomb);
+
+    m_pPlayer = new Player(5.f, 5.f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f), m_pTilemap);
+    m_pPlayer->SetTexture(m_pTextures["Player"]);
+    m_pPlayer->SetBomb(m_pBomb);
+
+    m_gameObjects.push_back(m_pPlayer);
+    
     m_pPathfinder = new Pathfinder(m_pTilemap, 10, 10);
 
     m_pEnemy = new Enemy(2.f, 2.f, "Circle", m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f), m_pPathfinder, m_pTilemap);
+    m_pEnemy->SetTexture(m_pTextures["Player"]);
 
     m_gameObjects.push_back(m_pEnemy);
 }

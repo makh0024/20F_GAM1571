@@ -186,14 +186,11 @@ void Enemy::FindPath()
 				fw::vec2 position = fw::vec2((float)nexttilex, (float)nexttiley);
 				float distance = position.Distance(m_Pos);
 
-				//Calculate the duration of the animation
 				m_Duration = distance / 2.f;
 				m_Remaining = m_Duration;
-
-				//Calculate the displacement between the two points
+				
 				m_Displacement = position - m_Pos;
-
-				//Keep track of the initial position
+				
 				m_StartingPosition = m_Pos;
 			}
 	}
