@@ -12,6 +12,7 @@ public:
 	void Explode();
 
 	void SetIsActive(bool active);
+	bool m_isActive;
 protected:
 
 private:	
@@ -22,5 +23,4 @@ private:
 
 	float timer;
 
-	bool m_isActive;
 };

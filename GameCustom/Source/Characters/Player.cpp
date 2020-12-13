@@ -121,8 +121,11 @@ void Player::Update(float deltaTime)
 
 	if (m_pPlayerController->IsHeld(PlayerController::Mask::Throw) == true)
 	{
-		m_pBomb->SetPosition(fw::vec2((int)m_Pos.x, (int)m_Pos.y));
-		m_pBomb->SetIsActive(true);
+		if (m_pBomb->m_isActive == false)
+		{
+			m_pBomb->SetPosition(fw::vec2((int)(m_Pos.x + 0.5f), (int)m_Pos.y));
+			m_pBomb->SetIsActive(true);
+		}
 	}
 }
 
