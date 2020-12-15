@@ -14,8 +14,6 @@ public:
 
 	void Update(float deltaTime);
 
-	void SetBomb(Bomb* pBomb);
-
 protected:
 	PlayerController* m_pPlayerController;
 
@@ -29,13 +27,14 @@ private:
 
 	fw::vec2 m_dir;
 
-	Bomb* m_pBomb;
-
 	Tilemap* m_pTilemap;
 
 	bool CanMove(float deltaTime);
 
 	bool m_isAlive = true;
+
+	float placingtimer = 0.f;
+	bool hasplaced = false;
 
 	//bool m_hasExploded = false;
 };

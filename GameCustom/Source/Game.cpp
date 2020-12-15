@@ -40,6 +40,11 @@ Game::~Game()
         delete pObject;
     }
 
+    for (fw::GameObject* pObject : m_pBombs)
+    {
+        delete pObject;
+    }
+
     for ( std::pair<std::string, fw::ShaderProgram*> object : m_pShaders)
     {
         delete object.second;
@@ -67,8 +72,6 @@ void Game::Update(float deltaTime)
     ImGui::ShowDemoWindow();
 
     m_pTilemap->SendPlayerPos(m_pPlayer->GetPosition());
-    //m_pEnemy->ChangeCameraPos(m_pPlayer->GetPosition());
-   // m_pPlayer->ChangeCameraPos(m_pPlayer->GetPosition());
 
 
     for (int i = 0; i < m_gameObjects.size(); i++)
@@ -76,10 +79,27 @@ void Game::Update(float deltaTime)
         m_gameObjects.at(i)->Update(deltaTime);
 
         m_gameObjects.at(i)->ChangeCameraPos(m_pPlayer->GetPosition());
+    }
 
-        ImGui::PushID(m_gameObjects.at(i));
+    for (int i = 0; i < m_pBombs.size(); i++)
+    {
+        m_pBombs.at(i)->Update(deltaTime);
+
+        if (m_pBombs.at(i)->hasexploded == true)
+        {
+            m_pEventManager->AddEvent(new RemoveBombFromGameEvent(m_pBombs.at(i)), 0.f);
+        }
         
-        ImGui::PopID();
+        for (int u = 0; u < 9; u++)
+        {
+            if (m_pEnemy != nullptr)
+            {
+                if (m_pEnemy->unsafetiles.size() < 19)
+                    m_pEnemy->unsafetiles.push_back(m_pBombs.at(i)->explodedtiles[u]);
+            }
+        }
+
+        m_pBombs.at(i)->ChangeCameraPos(m_pPlayer->GetPosition());
     }
 
     if (ImGui::Checkbox("VSync", &m_VSyncEnabled))
@@ -95,6 +115,11 @@ void Game::Draw()
     glClear(GL_COLOR_BUFFER_BIT);
 
     m_pTilemap->Draw();
+   
+    for (int i = 0; i < m_pBombs.size(); i++)
+    {
+        m_pBombs.at(i)->Draw();
+    }
    
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
@@ -119,6 +144,84 @@ void Game::OnEvent(fw::Event* pEvent)
 
         delete pObject;
     }  
+
+    if (pEvent->GetType() == BombExplosionEvent::GetStaticEventType())
+    {
+        BombExplosionEvent* pbombmadeby = static_cast<BombExplosionEvent*>(pEvent);
+        fw::GameObject* pObject = pbombmadeby->GetGameObject();
+
+        Bomb* tempBomb = new Bomb(6.f, 8.f, "Bomb", m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.f), this, fw::vec2(0.5f, 0.5f), m_pTilemap);
+        tempBomb->SetTexture(m_pTextures["Bomb"]);
+
+        if (tempBomb->m_isActive == false)
+        {
+            tempBomb->SetPosition(fw::vec2((float)((int)(pObject->GetPosition().x + 0.5f)), (float)((int)(pObject->GetPosition().y))));
+            tempBomb->SetIsActive(true);
+        }
+
+        /*for (int i = 0; i < 9; i++)
+        {
+            m_pEnemy->unsafetiles.push_back(tempBomb->explodedtiles[i]);
+        }*/
+
+        m_pBombs.push_back(tempBomb);
+        //m_gameObjects.push_back(tempBomb);
+    }
+
+    if (pEvent->GetType() == RemoveBombFromGameEvent::GetStaticEventType())
+    {
+        RemoveBombFromGameEvent* pRemoveBombFromGameEvent = static_cast<RemoveBombFromGameEvent*>(pEvent);
+        Bomb* pObject = pRemoveBombFromGameEvent->GetBomb();
+        
+        //also updates unsafetiles to enemy
+        if (m_pEnemy != nullptr)
+        {
+            if (m_pEnemy->unsafetiles.size() > 0)
+            {
+                for (int i = 0; i < m_pEnemy->unsafetiles.size(); i++)
+                {
+                    for (int u = 0; u < 9; u++)
+                    {
+                        if (i < m_pEnemy->unsafetiles.size())
+                        {
+                            if (m_pEnemy->unsafetiles.at(i) == pObject->explodedtiles[u])
+                            {
+                                m_pEnemy->unsafetiles.erase(m_pEnemy->unsafetiles.begin() + i);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //this function also checks for enemy and player deaths
+        fw::vec2 enemyPos = m_pEnemy->GetPosition();
+        fw::vec2 playerPos = m_pPlayer->GetPosition();
+
+        int enemytile = (int)(enemyPos.y * m_pTilemap->m_MapSize.x) + (int)(enemyPos.x + 0.5f);
+        int playertile = (int)(playerPos.y * m_pTilemap->m_MapSize.x) + (int)(playerPos.x + 0.5f);
+
+        for (int i = 0; i < 9; i++)
+        {
+            if (playertile == pObject->explodedtiles[i])
+            {
+                m_pEventManager->AddEvent(new RemoveFromGameEvent(m_pPlayer), 0.f);
+            }
+        }
+
+        for (int i = 0; i < 9; i++)
+        {
+            if (enemytile == pObject->explodedtiles[i])
+            {
+                m_pEventManager->AddEvent(new RemoveFromGameEvent(m_pEnemy), 0.f);
+            }
+        }
+
+        auto it = std::find(m_pBombs.begin(), m_pBombs.end(), pObject);
+        m_pBombs.erase(it);
+
+        delete pObject;
+    }
 }
 
 void Game::StartFrame(float deltaTime)
@@ -164,15 +267,8 @@ void Game::Init()
     //Tilemap Settings
     m_pTilemap = new Tilemap(10, 10, level1Layout, m_pMeshs["Player"], m_pShaders["Basic"], m_pTextures["Player"], m_pSpritesheet);
 
-
-    m_pBomb = new Bomb(6.f, 8.f, "Bomb", m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.f), this, fw::vec2(0.5f, 0.5f), m_pTilemap);
-    m_pBomb->SetTexture(m_pTextures["Bomb"]);
-
-    m_gameObjects.push_back(m_pBomb);
-
     m_pPlayer = new Player(8.f, 8.f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f), m_pTilemap);
     m_pPlayer->SetTexture(m_pTextures["Player"]);
-    m_pPlayer->SetBomb(m_pBomb);
 
     m_gameObjects.push_back(m_pPlayer);
     
@@ -180,6 +276,7 @@ void Game::Init()
 
     m_pEnemy = new Enemy(1.f, 1.f, "Circle", m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f), m_pPathfinder, m_pTilemap);
     m_pEnemy->SetTexture(m_pTextures["Player"]);
+    //m_pEnemy->SetBomb(m_pBombEnemy);
 
     m_gameObjects.push_back(m_pEnemy);
 }

@@ -24,6 +24,8 @@ public:
 protected:
 
     std::vector<fw::GameObject*> m_gameObjects;
+    std::vector<Bomb*> m_pBombs;
+
 
     fw::ImGuiManager* m_pImguiMan = nullptr;
 
@@ -50,6 +52,8 @@ protected:
     Enemy* m_pEnemy;
 
     Bomb* m_pBomb;
+
+    Bomb* m_pBombEnemy;
     //Settings
     bool m_VSyncEnabled = true;
 };

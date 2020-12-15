@@ -28,12 +28,25 @@ void Bomb::Update(float deltaTime)
 
 		SetCanDraw(true);
 
-		if (timer > 2)
+		if (timer > 4)
 		{
 			Explode();
 
 			timer = 0.f;
 			m_isActive = false;
+		}
+
+		for (int i = 1; i < 3; i++)
+		{
+			explodedtiles[0] = (int)(m_Pos.y * m_pTilemap->m_MapSize.x + m_Pos.x);
+
+			//vertical
+			explodedtiles[i] = (int)(m_Pos.y * m_pTilemap->m_MapSize.x + m_Pos.x) + 10 * i;
+			explodedtiles[i + 2] = (int)(m_Pos.y * m_pTilemap->m_MapSize.x + m_Pos.x) - 10 * i;
+
+			//horizontal
+			explodedtiles[i + 4] = (int)(m_Pos.y * m_pTilemap->m_MapSize.x + m_Pos.x) + 1 * i;
+			explodedtiles[i + 6] = (int)(m_Pos.y * m_pTilemap->m_MapSize.x + m_Pos.x) - 1 * i;
 		}
 
 	}
@@ -42,32 +55,65 @@ void Bomb::Update(float deltaTime)
 }
 
 void Bomb::Explode()
-{
+{	
+
 	int bombtile = (int)(m_Pos.y * m_pTilemap->m_MapSize.x + m_Pos.x);
 	//bombtile--;
 	SetCanDraw(false);
 
-	//vertical
-	for (int i = 10; i < 21; i += 10)
-	{
-		if (bombtile + i < 100)
-			m_pTilemap->m_pLayout[bombtile + i] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile + i] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile + i] = m_pTilemap->m_pLayout[bombtile + i];
-		
-		if (bombtile - 10 > 0)
-			m_pTilemap->m_pLayout[bombtile - i] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile - i] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile - i] = m_pTilemap->m_pLayout[bombtile - i];
-	}
-	
-	//horizontal
-	for (int i = 1; i < 3; i++)
-	{
-		if (bombtile + i < 100)
-			m_pTilemap->m_pLayout[bombtile + i] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile + i] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile + i] = m_pTilemap->m_pLayout[bombtile + i];
-		
-		if (bombtile - i > 0)
-			m_pTilemap->m_pLayout[bombtile - i] == Tilemap::TileType::Wall ? m_pTilemap->m_pLayout[bombtile - i] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[bombtile - i] = m_pTilemap->m_pLayout[bombtile - i];
-	}
-	
+	int bombtilex = bombtile % (int)m_pTilemap->m_MapSize.x;
+	int bombtiley = bombtile / (int)m_pTilemap->m_MapSize.y;
 
+	int range = 2;
+
+	//vertical
+	for (int i = 0; i < range; i++)
+	{
+		int tocheck = bombtile + (i + 1) * (int)(m_pTilemap->m_MapSize.y);
+
+		if (bombtiley + i + 1 < m_pTilemap->m_MapSize.y)
+			m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true ? m_pTilemap->m_pLayout[tocheck] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[tocheck] = m_pTilemap->m_pLayout[tocheck];
+		
+		if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible != true)
+			break;
+
+	}
+
+	for (int i = 0; i < range; i++)
+	{
+		int tocheck = bombtile - (i + 1) * (int)(m_pTilemap->m_MapSize.y);
+
+		if (bombtiley + i + 1 < m_pTilemap->m_MapSize.y)
+			m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true ? m_pTilemap->m_pLayout[tocheck] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[tocheck] = m_pTilemap->m_pLayout[tocheck];
+		
+		if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible != true)
+			break;
+	}
+
+	//horizontal
+	for (int i = 0; i < range; i++)
+	{
+		int tocheck = bombtile + (i + 1);
+
+		if (bombtilex + i + 1 < m_pTilemap->m_MapSize.x)
+			m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true ? m_pTilemap->m_pLayout[tocheck] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[tocheck] = m_pTilemap->m_pLayout[tocheck];
+		
+		if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible != true)
+			break;
+	}
+
+	for (int i = 0; i < range; i++)
+	{
+		int tocheck = bombtile - (i + 1);
+
+		if (bombtilex - i + 1 < m_pTilemap->m_MapSize.x)
+			m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true ? m_pTilemap->m_pLayout[tocheck] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[tocheck] = m_pTilemap->m_pLayout[tocheck];
+	
+		if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible != true)
+			break;
+	}
+
+	hasexploded = true;
 }
 
 void Bomb::SetIsActive(bool active)

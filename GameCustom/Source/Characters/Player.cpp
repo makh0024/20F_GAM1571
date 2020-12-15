@@ -7,6 +7,8 @@ using namespace fw;
 #include "Tilemap/Tilemap.h"
 #include "GameItems/Bomb.h"
 
+#include "Events/GameEvents.h"
+
 Player::Player(float x, float y, std::string Name, PlayerController* pPlayerController, Mesh* Mesh, ShaderProgram* Shader, fw::vec4 color, GameCore* pGameCore, fw::Spritesheet* pSpritesheet, fw::vec2 playerScale, Tilemap* pTilemap) :
 	fw::GameObject (x, y, Name, Mesh, Shader, color, pGameCore, Type::Player, playerScale)
 {
@@ -123,51 +125,72 @@ void Player::Update(float deltaTime)
 
 		if (m_pPlayerController->IsHeld(PlayerController::Mask::Throw) == true)
 		{
-			if (m_pBomb->m_isActive == false)
+			if (hasplaced == false)
+			{
+				m_pGameCore->GetEventManager()->AddEvent(new BombExplosionEvent(this), 0.f);
+				hasplaced = true;
+			}
+			/*if (m_pBomb->m_isActive == false)
 			{
 				m_pBomb->SetPosition(fw::vec2((int)(m_Pos.x + 0.5f), (int)m_Pos.y));
 				m_pBomb->SetIsActive(true);
-			}
+			}*/
 		}
 
-		if (m_pBomb->timer > 1.9f)
+		/*if (m_pBomb->timer > 3.99f || m_pOtherBomb->timer > 3.99f)
 		{
-			int explodedtile[8];
+			int playertile = (int)(m_Pos.y * m_pTilemap->m_MapSize.x) + (int)(m_Pos.x + 0.5f);
 
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < 9; i++)
 			{
-				//vertical
-				explodedtile[i] = (int)(m_pBomb->GetPosition().y * m_pTilemap->m_MapSize.x + m_pBomb->GetPosition().x) + 10 * i;
-				explodedtile[i + 2] = (int)(m_pBomb->GetPosition().y * m_pTilemap->m_MapSize.x + m_pBomb->GetPosition().x) + 10 * -i;
-
-				//horizontal
-				explodedtile[i + 4] = (int)(m_pBomb->GetPosition().y * m_pTilemap->m_MapSize.x + m_pBomb->GetPosition().x) + 1 * i;
-				explodedtile[i + 6] = (int)(m_pBomb->GetPosition().y * m_pTilemap->m_MapSize.x + m_pBomb->GetPosition().x) + 1 * -i;
-			}
-
-			int playertile = (int)(m_Pos.y * m_pTilemap->m_MapSize.x + m_Pos.x);
-
-			for (int i = 0; i < 8; i++)
-			{
-				if (playertile == explodedtile[i])
+				if (m_pBomb->m_isActive == true)
 				{
-					SetCanDraw(false);
-					
-					m_isAlive = false;
+					if (playertile == m_pBomb->explodedtiles[i])
+					{
+						SetCanDraw(false);
+
+						m_isAlive = false;
+					}
 				}
+				else if (m_pOtherBomb->m_isActive == true)
+				{
+					if ( playertile == m_pOtherBomb->explodedtiles[i])
+					{
+						SetCanDraw(false);
+
+						m_isAlive = false;
+					}
+				}
+			}
+		}*/
+
+		if (hasplaced == true)
+		{
+			placingtimer += deltaTime;
+
+			if (placingtimer > 4)
+			{
+				hasplaced = false;
+				placingtimer = 0.f;
 			}
 		}
 	}
 	else
 	{
-		m_Pos = fw::vec2(5.f, 5.f); //camera to middle of screen
+		m_Pos = fw::vec2(4.5f, 4.5f); //camera to middle of screen
 	}
+
 }
 
-void Player::SetBomb(Bomb* pBomb)
-{
-	m_pBomb = pBomb;
-}
+//void Player::SetBomb(Bomb* pBomb)
+//{
+//	m_pBomb = pBomb;
+//}
+//
+//void Player::SetOtherBomb(Bomb* pBomb)
+//{
+//	m_pOtherBomb = pBomb;
+//}
 
 bool Player::CanMove(float deltaTime)
 {

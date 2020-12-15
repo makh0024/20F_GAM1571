@@ -1,4 +1,5 @@
 #pragma once
+#include "GameItems/Bomb.h"
 
 class RemoveFromGameEvent : public fw::Event
 {
@@ -19,85 +20,40 @@ protected:
     fw::GameObject* m_pObject;
 };
 
-class SpawnNewEnemyEvent : public fw::Event
+class BombExplosionEvent : public fw::Event
 {
 public:
-    SpawnNewEnemyEvent()
+    BombExplosionEvent(fw::GameObject* bombplacedby)
     {
-        m_EventType = "SpawnNewEnemyEvent";
+        m_EventType = "BombExplosionEvent";
+        m_pObject = bombplacedby;
     }
-    ~SpawnNewEnemyEvent() {}
+    ~BombExplosionEvent() {}
 
-    static const char* GetStaticEventType() { return "SpawnNewEnemyEvent"; }
+    static const char* GetStaticEventType() { return "BombExplosionEvent"; }
     virtual const char* GetType() override { return GetStaticEventType(); }
 
-protected:
+    fw::GameObject* GetGameObject() { return m_pObject; }
 
+protected:
+    fw::GameObject* m_pObject;
 };
 
-class SpawnPickupsEvent : public fw::Event
+class RemoveBombFromGameEvent : public fw::Event
 {
 public:
-    SpawnPickupsEvent()
+    RemoveBombFromGameEvent(Bomb* pObject)
     {
-        m_EventType = "SpawnPickupsEvent";
+        m_EventType = "RemoveBombFromGameEvent";
+        m_pObject = pObject;
     }
-    ~SpawnPickupsEvent() {}
+    ~RemoveBombFromGameEvent() {}
 
-    static const char* GetStaticEventType() { return "SpawnPickupsEvent"; }
+    static const char* GetStaticEventType() { return "RemoveBombFromGameEvent"; }
     virtual const char* GetType() override { return GetStaticEventType(); }
 
-protected:
-
-};
-
-class GameOverEvent : public fw::Event
-{
-public:
-    GameOverEvent()
-    {
-        m_EventType = "GameOverEvent";
-    }
-    ~GameOverEvent() {}
-
-    static const char* GetStaticEventType() { return "GameOverEvent"; }
-    virtual const char* GetType() override { return GetStaticEventType(); }
+    Bomb* GetBomb() { return m_pObject; }
 
 protected:
-
-};
-
-class RestartEvent : public fw::Event
-{
-public:
-    RestartEvent()
-    {
-        m_EventType = "RestartEvent";
-    }
-    ~RestartEvent() {}
-
-    static const char* GetStaticEventType() { return "RestartEvent"; }
-    virtual const char* GetType() override { return GetStaticEventType(); }
-
-protected:
-
-};
-
-class EnemyCollisionEvent : public fw::Event
-{
-public:
-    EnemyCollisionEvent(fw::GameObject* pObject)
-    {
-        m_EventType = "EnemyCollisionEvent";
-    }
-    ~EnemyCollisionEvent() {}
-
-    static const char* GetStaticEventType() { return "EnemyCollisionEvent"; }
-    virtual const char* GetType() override { return GetStaticEventType(); }
-
-    /*fw::GameObject* GetGameObject() { return m_pObject; }
-
-protected:
-    fw::GameObject* m_pObject;*/
-
+    Bomb* m_pObject;
 };

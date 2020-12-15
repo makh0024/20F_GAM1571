@@ -4,14 +4,15 @@ class Player;
 
 struct TileProperties
 {
+	bool isDestructible;
 	bool bIsWalkable;
 	fw::vec2 m_UVScale;
 	fw::vec2 m_UVOffset;
 
-	TileProperties(fw::Sprite* SpriteInfo, bool walkable)
+	TileProperties(fw::Sprite* SpriteInfo, bool walkable, bool destructible)
 	{
 		bIsWalkable = walkable;
-
+		isDestructible = destructible;
 		m_UVScale = fw::vec2(SpriteInfo->m_ScaleX / 256.0f, SpriteInfo->m_ScaleY / 128.0f);
 		m_UVOffset = fw::vec2(SpriteInfo->m_OffsetX / 256.0f, SpriteInfo->m_OffsetY / 128.0f);
 	}
@@ -32,10 +33,11 @@ public:
 		WallNW = 7,
 		WallSE = 8,
 		WallSW = 9,
+		Bomb = 10,
 		NumTypes
 	};
 
-	Tilemap(int width, int height, TileType* pLayout, fw::Mesh* mesh, fw::ShaderProgram* shader, fw::Texture* texture, fw::Spritesheet* spriteSheet);
+	Tilemap(int width, int height, const TileType* pLayout, fw::Mesh* mesh, fw::ShaderProgram* shader, fw::Texture* texture, fw::Spritesheet* spriteSheet);
 	~Tilemap();
 
 	void SendPlayerPos(fw::vec2 playerPos);
@@ -50,8 +52,8 @@ public:
 	
 	fw::vec2 m_MapSize;
 	TileType* m_pLayout;
-protected:
 	std::vector<TileProperties> m_pTileProperties;
+protected:
 
 	fw::Spritesheet* m_pSpritesheet = nullptr;
 	fw::Sprite* m_pTileSprite;

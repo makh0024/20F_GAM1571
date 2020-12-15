@@ -18,6 +18,8 @@ struct PathNode
     float f; // Current sum.
     float g; // Cost to get to current node.
     float h; // Heuristic: manhatten distance to destination.
+
+    bool safe;
 };
 
 class Pathfinder

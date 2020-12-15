@@ -20,6 +20,7 @@
 		-- "Game/Data/**.vert",
 		-- "Game/Data/**.frag",
 		-- "premake5.lua",
+		-- "ReadMe.txt"
 		-- "GenerateProjectFiles.bat",
 		-- ".gitignore",
 	-- }

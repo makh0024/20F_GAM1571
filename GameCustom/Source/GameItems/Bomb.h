@@ -14,6 +14,8 @@ public:
 	void SetIsActive(bool active);
 	bool m_isActive;
 	float timer;
+	int explodedtiles[9];
+	bool hasexploded = false;
 protected:
 
 private:	
@@ -21,6 +23,5 @@ private:
 	fw::vec2 m_UVScale = fw::vec2(1, 1);
 	fw::vec2 m_UVOffset = fw::vec2(0, 0);
 	Tilemap* m_pTilemap;
-
 
 };

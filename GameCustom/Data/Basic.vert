@@ -21,7 +21,8 @@ void main()
     pos += u_ObjectPos;
 
     // Offset from camera position
-    pos -= u_CameraPos;
+    pos -= vec2(4.5f, 4.5f);
+    //pos -= u_CameraPos;
 
     // Divide to fit in clip space
     pos /= vec2(5, 5);

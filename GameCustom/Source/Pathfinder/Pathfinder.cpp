@@ -35,10 +35,31 @@ void Pathfinder::Reset()
     {
         m_Nodes[i].parentNodeIndex = -1;
         m_Nodes[i].status = PathNode::Unchecked;
+        m_Nodes[i].safe = true;
 
         m_Nodes[i].f = 0;
         m_Nodes[i].g = FLT_MAX; // Set G to be highest cost possible, so any comparison will be better.
         m_Nodes[i].h = -1; // -1 indicates the heuristic hasn't been calculated yet.
+    }
+
+    for (int i = 0; i < m_NumNodes; i++)
+    {
+        if (m_pTilemap->m_pLayout[i] == Tilemap::TileType::Bomb)
+        {
+            m_Nodes[i].safe = false;
+
+            int tx = i % m_MapWidth;
+            int ty = i / m_MapHeight;
+
+            for (int r = 0; r < 2; r++)
+            {
+                if (tx + r < m_MapWidth)
+                {
+                    m_Nodes[ty * m_MapWidth + tx + r].safe = false;
+                }
+            }
+            //do same for left up down
+        }
     }
 }
 

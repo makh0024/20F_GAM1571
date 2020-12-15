@@ -4,6 +4,7 @@
 class PlayerController;
 class Pathfinder;
 class Tilemap;
+class Bomb;
 
 class Enemy : public fw::GameObject
 {
@@ -16,6 +17,9 @@ public:
 
 	void FindPath();
 
+	void PlaceBomb();
+
+	std::vector<int> unsafetiles;
 protected:
 	//PlayerController* m_pPlayerController;
 
@@ -55,5 +59,16 @@ private:
 
 	float breaktime;
 
+	bool m_isAlive = true;
+
 	bool runbreaktime = false;
+
+	int findpathtimes = 0;
+
+	bool hasplacedbomb = false;
+
+	float placingtimer = 0.f;
+	bool hasplaced = false;
+
+	bool isbombactive = false;
 };
