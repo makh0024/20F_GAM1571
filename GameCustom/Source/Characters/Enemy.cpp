@@ -225,7 +225,7 @@ void Enemy::Update(float deltaTime)
 			placingtimer += deltaTime;
 			isbombactive = true;
 
-			if (placingtimer > 4)
+			if (placingtimer > 4.5f)
 			{
 				hasplaced = false;
 				placingtimer = 0.f;
@@ -359,13 +359,13 @@ void Enemy::FindPath()
 		runbreaktime = true;
 	}
 
-	/*OutputMessage("Length = %d\n", len);
+	OutputMessage("Length = %d\n", len);
 	for (int i = 0; i < len; i++)
 	{
 		OutputMessage("%d\n", path[i]);
 	}
 
-	OutputMessage("done\n");*/
+	OutputMessage("done\n");
 	
 	
 }

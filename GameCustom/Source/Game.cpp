@@ -152,7 +152,7 @@ void Game::OnEvent(fw::Event* pEvent)
 
         if (tempBomb->m_isActive == false)
         {
-            tempBomb->SetPosition(fw::vec2((float)((int)(pObject->GetPosition().x + 0.5f)), (float)((int)(pObject->GetPosition().y))));
+            tempBomb->SetPosition(fw::vec2((floor(pObject->GetPosition().x + 0.5f)), floor(pObject->GetPosition().y)));
             tempBomb->SetIsActive(true);
         }
 
