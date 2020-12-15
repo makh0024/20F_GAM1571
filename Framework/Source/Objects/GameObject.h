@@ -20,7 +20,7 @@ namespace fw {
 		Type GetType() { return m_objectType; }
 	public:
 		GameObject(float x, float y, std::string Name, Mesh* Mesh, ShaderProgram* Shader, vec4 color, GameCore* pGameCore, Type objectType, vec2 scale);
-		~GameObject();
+		virtual ~GameObject();
 
 		virtual void Update(float deltaTime);
 		void Draw();

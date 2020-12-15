@@ -48,7 +48,7 @@ void Player::Update(float deltaTime)
 		if (m_pPlayerController->IsHeld(PlayerController::Mask::Up))
 		{
 			m_dir.y = 2.0f;
-			m_dir.x = 0.f;
+			//m_dir.x = 0.f;
 			int noOfFrames = 3;
 
 			for (int i = 0; i < noOfFrames; i++)
@@ -63,7 +63,7 @@ void Player::Update(float deltaTime)
 		else if (m_pPlayerController->IsHeld(PlayerController::Mask::Left))
 		{
 			m_dir.x = -2.0f;
-			m_dir.y = 0.f;
+			//m_dir.y = 0.f;
 			int noOfFrames = 3;
 
 			for (int i = 0; i < noOfFrames; i++)
@@ -78,7 +78,7 @@ void Player::Update(float deltaTime)
 		else if (m_pPlayerController->IsHeld(PlayerController::Mask::Down))
 		{
 			m_dir.y = -2.0f;
-			m_dir.x = 0.f;
+			//m_dir.x = 0.f;
 			int noOfFrames = 3;
 
 			for (int i = 0; i < noOfFrames; i++)
@@ -93,7 +93,7 @@ void Player::Update(float deltaTime)
 		else if (m_pPlayerController->IsHeld(PlayerController::Mask::Right))
 		{
 			m_dir.x = 2.0f;
-			m_dir.y = 0.f;
+			//m_dir.y = 0.f;
 			int noOfFrames = 3;
 
 			for (int i = 0; i < noOfFrames; i++)
@@ -118,8 +118,18 @@ void Player::Update(float deltaTime)
 		m_UVOffset = vec2(DefaultSprite->m_OffsetX / (float)m_pSpritesheet->m_Width, DefaultSprite->m_OffsetY / (float)m_pSpritesheet->m_Height);
 		m_UVScale = vec2(DefaultSprite->m_ScaleX / (float)m_pSpritesheet->m_Width, DefaultSprite->m_ScaleY / (float)m_pSpritesheet->m_Height);
 
+
+		vec2 dir2 = m_dir;
+		m_dir.y = 0;
+
 		if (CanMove(deltaTime) == true)
 			m_Pos += m_dir * deltaTime;
+
+		m_dir.x = 0;
+		m_dir.y = dir2.y;
+		if (CanMove(deltaTime) == true)
+			m_Pos += m_dir * deltaTime;
+
 
 		ImGui::DragFloat2("Position", &m_Pos.x, 0.1f);
 

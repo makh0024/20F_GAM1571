@@ -71,14 +71,17 @@ void Game::Update(float deltaTime)
     m_pImguiMan->StartFrame(deltaTime);
     ImGui::ShowDemoWindow();
 
-    m_pTilemap->SendPlayerPos(m_pPlayer->GetPosition());
-
+    if (m_pPlayer != nullptr)
+    {
+        m_pTilemap->SendPlayerPos(m_pPlayer->GetPosition());
+    }
 
     for (int i = 0; i < m_gameObjects.size(); i++)
     {
         m_gameObjects.at(i)->Update(deltaTime);
 
-        m_gameObjects.at(i)->ChangeCameraPos(m_pPlayer->GetPosition());
+        if (m_pPlayer != nullptr)
+            m_gameObjects.at(i)->ChangeCameraPos(m_pPlayer->GetPosition());
     }
 
     for (int i = 0; i < m_pBombs.size(); i++)
@@ -93,7 +96,7 @@ void Game::Update(float deltaTime)
             }
         }
 
-        m_pBombs.at(i)->ChangeCameraPos(m_pPlayer->GetPosition());
+        //m_pBombs.at(i)->ChangeCameraPos(m_pPlayer->GetPosition());
     }
 
     if (ImGui::Checkbox("VSync", &m_VSyncEnabled))
@@ -189,28 +192,35 @@ void Game::OnEvent(fw::Event* pEvent)
         }
 
         //this function also checks for enemy and player deaths
-        fw::vec2 enemyPos = m_pEnemy->GetPosition();
-        fw::vec2 playerPos = m_pPlayer->GetPosition();
-
-        int enemytile = (int)(enemyPos.y) * (int)(m_pTilemap->m_MapSize.x) + (int)(enemyPos.x + 0.5f);
-        int playertile = (int)(playerPos.y) * (int)(m_pTilemap->m_MapSize.x) + (int)(playerPos.x + 0.5f);
-
-        for (int i = 0; i < pObject->actuallyexploded.size(); i++)
+        if (m_pEnemy != nullptr)
         {
-            if (playertile == pObject->actuallyexploded[i])
+            fw::vec2 enemyPos = m_pEnemy->GetPosition();
+            int enemytile = (int)(enemyPos.y) * (int)(m_pTilemap->m_MapSize.x) + (int)(enemyPos.x + 0.5f);
+            for (int i = 0; i < pObject->actuallyexploded.size(); i++)
             {
-                m_pEventManager->AddEvent(new RemoveFromGameEvent(m_pPlayer), 0.f);
+                if (enemytile == pObject->actuallyexploded[i])
+                {
+                    m_pEventManager->AddEvent(new RemoveFromGameEvent(m_pEnemy), 0.f);
+                    m_pEnemy = nullptr;
+                }
             }
         }
 
-        for (int i = 0; i < pObject->actuallyexploded.size(); i++)
+        if (m_pPlayer != nullptr)
         {
-            if (enemytile == pObject->actuallyexploded[i])
+            fw::vec2 playerPos = m_pPlayer->GetPosition();
+
+            int playertile = (int)(playerPos.y) * (int)(m_pTilemap->m_MapSize.x) + (int)(playerPos.x + 0.5f);
+
+            for (int i = 0; i < pObject->actuallyexploded.size(); i++)
             {
-                m_pEventManager->AddEvent(new RemoveFromGameEvent(m_pEnemy), 0.f);
+                if (playertile == pObject->actuallyexploded[i])
+                {
+                    m_pEventManager->AddEvent(new RemoveFromGameEvent(m_pPlayer), 0.f);
+                    m_pPlayer = nullptr;
+                }
             }
         }
-
         auto it = std::find(m_pBombs.begin(), m_pBombs.end(), pObject);
         m_pBombs.erase(it);
 

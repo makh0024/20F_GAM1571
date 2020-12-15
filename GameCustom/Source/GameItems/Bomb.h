@@ -5,7 +5,7 @@ class Bomb : public fw::GameObject
 {
 public:
 	Bomb(float x, float y, std::string Name, fw::Mesh* Mesh, fw::ShaderProgram* Shader, fw::vec4 color, fw::GameCore* pGameCore, fw::vec2 playerScale, Tilemap* pTilemap);
-	~Bomb();
+	~Bomb() override;
 
 	void Update(float deltaTime);
 
