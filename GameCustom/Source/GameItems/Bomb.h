@@ -16,6 +16,8 @@ public:
 	float timer;
 	int explodedtiles[9];
 	bool hasexploded = false;
+
+	std::vector<int> actuallyexploded;
 protected:
 
 private:	

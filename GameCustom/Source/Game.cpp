@@ -84,18 +84,12 @@ void Game::Update(float deltaTime)
     for (int i = 0; i < m_pBombs.size(); i++)
     {
         m_pBombs.at(i)->Update(deltaTime);
-
-        if (m_pBombs.at(i)->hasexploded == true)
-        {
-            m_pEventManager->AddEvent(new RemoveBombFromGameEvent(m_pBombs.at(i)), 0.f);
-        }
         
         for (int u = 0; u < 9; u++)
         {
             if (m_pEnemy != nullptr)
             {
-                if (m_pEnemy->unsafetiles.size() < 19)
-                    m_pEnemy->unsafetiles.push_back(m_pBombs.at(i)->explodedtiles[u]);
+                m_pEnemy->unsafetiles.push_back(m_pBombs.at(i)->explodedtiles[u]);
             }
         }
 
@@ -198,20 +192,20 @@ void Game::OnEvent(fw::Event* pEvent)
         fw::vec2 enemyPos = m_pEnemy->GetPosition();
         fw::vec2 playerPos = m_pPlayer->GetPosition();
 
-        int enemytile = (int)(enemyPos.y * m_pTilemap->m_MapSize.x) + (int)(enemyPos.x + 0.5f);
-        int playertile = (int)(playerPos.y * m_pTilemap->m_MapSize.x) + (int)(playerPos.x + 0.5f);
+        int enemytile = (int)(enemyPos.y) * (int)(m_pTilemap->m_MapSize.x) + (int)(enemyPos.x + 0.5f);
+        int playertile = (int)(playerPos.y) * (int)(m_pTilemap->m_MapSize.x) + (int)(playerPos.x + 0.5f);
 
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < pObject->actuallyexploded.size(); i++)
         {
-            if (playertile == pObject->explodedtiles[i])
+            if (playertile == pObject->actuallyexploded[i])
             {
                 m_pEventManager->AddEvent(new RemoveFromGameEvent(m_pPlayer), 0.f);
             }
         }
 
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < pObject->actuallyexploded.size(); i++)
         {
-            if (enemytile == pObject->explodedtiles[i])
+            if (enemytile == pObject->actuallyexploded[i])
             {
                 m_pEventManager->AddEvent(new RemoveFromGameEvent(m_pEnemy), 0.f);
             }
@@ -252,15 +246,11 @@ void Game::Init()
 
     //Load Meshs
     m_pMeshs["Player"] = new fw::Mesh(meshPrimType_Sprite, meshNumVerts_Sprite, meshAttribs_Sprite);
+
     //Load Spritesheet
     m_pSpritesheet = new fw::Spritesheet("Data/Textures/Bomberman.json");
 
     //Create GameObjects
-
-    //m_pPlayer2 = new Player(0.5f, 0.5f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet);
-
-    //m_gameObjects.push_back(m_pPlayer2);
-
     //Settings
     wglSwapInterval(m_VSyncEnabled ? 1 : 0);
 
@@ -269,14 +259,11 @@ void Game::Init()
 
     m_pPlayer = new Player(8.f, 8.f, "Circle", m_pPlayerController, m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f), m_pTilemap);
     m_pPlayer->SetTexture(m_pTextures["Player"]);
-
     m_gameObjects.push_back(m_pPlayer);
     
-    m_pPathfinder = new Pathfinder(m_pTilemap, 10, 10);
 
+    m_pPathfinder = new Pathfinder(m_pTilemap, 10, 10);
     m_pEnemy = new Enemy(1.f, 1.f, "Circle", m_pMeshs["Player"], m_pShaders["Basic"], fw::vec4::White(1.0f), this, m_pSpritesheet, fw::vec2(0.5f, 1.f), m_pPathfinder, m_pTilemap);
     m_pEnemy->SetTexture(m_pTextures["Player"]);
-    //m_pEnemy->SetBomb(m_pBombEnemy);
-
     m_gameObjects.push_back(m_pEnemy);
 }

@@ -2,7 +2,7 @@
 #include "Tilemap/Tilemap.h"
 
 #include "Bomb.h"
-
+#include "Events/GameEvents.h"
 
 Bomb::Bomb(float x, float y, std::string Name, fw::Mesh* Mesh, fw::ShaderProgram* Shader, fw::vec4 color, fw::GameCore* pGameCore, fw::vec2 bombScale, Tilemap* pTilemap) : 
 	fw::GameObject(x, y, Name, Mesh, Shader, color, pGameCore, Type::Bomb, bombScale)
@@ -52,11 +52,15 @@ void Bomb::Update(float deltaTime)
 	}
 
 	ImGui::Text("%f, %f", m_Pos.x, m_Pos.y);
+
+	if (hasexploded == true)
+	{
+		m_pGameCore->GetEventManager()->AddEvent(new RemoveBombFromGameEvent(this), 0.f);
+	}
 }
 
 void Bomb::Explode()
 {	
-
 	int bombtile = (int)(m_Pos.y * m_pTilemap->m_MapSize.x + m_Pos.x);
 	//bombtile--;
 	SetCanDraw(false);
@@ -66,14 +70,21 @@ void Bomb::Explode()
 
 	int range = 2;
 
+	actuallyexploded.push_back(bombtile);
+
 	//vertical
 	for (int i = 0; i < range; i++)
 	{
 		int tocheck = bombtile + (i + 1) * (int)(m_pTilemap->m_MapSize.y);
 
 		if (bombtiley + i + 1 < m_pTilemap->m_MapSize.y)
+		{
 			m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true ? m_pTilemap->m_pLayout[tocheck] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[tocheck] = m_pTilemap->m_pLayout[tocheck];
-		
+
+			if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true)
+				actuallyexploded.push_back(tocheck);
+		}
+
 		if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible != true)
 			break;
 
@@ -84,8 +95,13 @@ void Bomb::Explode()
 		int tocheck = bombtile - (i + 1) * (int)(m_pTilemap->m_MapSize.y);
 
 		if (bombtiley + i + 1 < m_pTilemap->m_MapSize.y)
+		{
 			m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true ? m_pTilemap->m_pLayout[tocheck] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[tocheck] = m_pTilemap->m_pLayout[tocheck];
-		
+
+			if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true)
+				actuallyexploded.push_back(tocheck);
+		}
+
 		if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible != true)
 			break;
 	}
@@ -96,8 +112,12 @@ void Bomb::Explode()
 		int tocheck = bombtile + (i + 1);
 
 		if (bombtilex + i + 1 < m_pTilemap->m_MapSize.x)
+		{
 			m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true ? m_pTilemap->m_pLayout[tocheck] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[tocheck] = m_pTilemap->m_pLayout[tocheck];
-		
+
+			if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true)
+				actuallyexploded.push_back(tocheck);
+		}
 		if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible != true)
 			break;
 	}
@@ -107,8 +127,12 @@ void Bomb::Explode()
 		int tocheck = bombtile - (i + 1);
 
 		if (bombtilex - i + 1 < m_pTilemap->m_MapSize.x)
+		{
 			m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true ? m_pTilemap->m_pLayout[tocheck] = Tilemap::TileType::Floor : m_pTilemap->m_pLayout[tocheck] = m_pTilemap->m_pLayout[tocheck];
-	
+
+			if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible == true)
+				actuallyexploded.push_back(tocheck);
+		}
 		if (m_pTilemap->m_pTileProperties[(int)m_pTilemap->m_pLayout[tocheck]].isDestructible != true)
 			break;
 	}

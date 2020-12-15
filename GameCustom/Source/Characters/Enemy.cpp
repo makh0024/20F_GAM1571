@@ -156,13 +156,27 @@ void Enemy::Update(float deltaTime)
 		{
 			breaktime += deltaTime;
 
-			if (breaktime > 1)
+			if (hasplaced == true)
 			{
-				hasreached = true;
-				findpathtimes++;
-				runbreaktime = false;
+				if (breaktime > 0.4f)
+				{
+					hasreached = true;
+					findpathtimes++;
+					runbreaktime = false;
 
-				breaktime = 0.f;
+					breaktime = 0.f;
+				}
+			}
+			else
+			{
+				if (breaktime > 1)
+				{
+					hasreached = true;
+					findpathtimes++;
+					runbreaktime = false;
+
+					breaktime = 0.f;
+				}
 			}
 		}
 
@@ -271,16 +285,22 @@ void Enemy::FindPath()
 			}
 			
 		}
-
-		int randomnum = rand() % possibleEndx.size();
-		m_endx = possibleEndx[randomnum];
-		m_endy = possibleEndy[randomnum];
-
+		if (possibleEndx.size() > 0)
+		{
+			int randomnum = rand() % possibleEndx.size();
+			m_endx = possibleEndx[randomnum];
+			m_endy = possibleEndy[randomnum];
+		}
+		else
+		{
+			m_endx = 1;
+			m_endy = 1;
+		}
 		hasreached = false;
 	}
 
 	bool found = m_pPathfinder->FindPath(startx, starty, m_endx, m_endy);
-	OutputMessage("Found = %d\n", found);
+	//OutputMessage("Found = %d\n", found);
 		
 	int path[255];
 	int len = m_pPathfinder->GetPath(path, 255, m_endx, m_endy);
@@ -339,13 +359,13 @@ void Enemy::FindPath()
 		runbreaktime = true;
 	}
 
-	OutputMessage("Length = %d\n", len);
+	/*OutputMessage("Length = %d\n", len);
 	for (int i = 0; i < len; i++)
 	{
 		OutputMessage("%d\n", path[i]);
 	}
 
-	OutputMessage("done\n");
+	OutputMessage("done\n");*/
 	
 	
 }

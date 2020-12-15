@@ -36,7 +36,7 @@ protected:
     fw::Spritesheet* m_pSpritesheet;
 
     Player* m_pPlayer = nullptr;
-    Player* m_pPlayer2 = nullptr;
+    //Player* m_pPlayer2 = nullptr;
 
     float m_boundaryRad;
     int m_numSides;
